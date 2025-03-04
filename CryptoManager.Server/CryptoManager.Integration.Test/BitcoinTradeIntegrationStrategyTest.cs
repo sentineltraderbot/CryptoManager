@@ -60,7 +60,7 @@ namespace CryptoManager.Integration.Test
             var strategy = new BitcoinTradeIntegrationStrategy(cacheMock.Object, clientMock.Object);
             var result = await strategy.GetCurrentPriceAsync("nuncatera", "jsdhjkdhsajkdh");
             Assert.False(result.HasSucceded);
-            Assert.Equal($"symbol {symbol} not exists in Bitcointrade", result.ErrorMessage);
+            Assert.Equal($"symbol {symbol} does not exist in Bitcointrade", result.ErrorMessage);
         }
     }
 }

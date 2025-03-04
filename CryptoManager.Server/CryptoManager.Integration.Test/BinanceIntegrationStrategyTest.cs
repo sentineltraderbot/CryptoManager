@@ -58,7 +58,7 @@ namespace CryptoManager.Integration.Test
             var strategy = new BinanceIntegrationStrategy(cacheMock.Object, clientMock.Object);
             var result = await strategy.GetCurrentPriceAsync("nuncatera", "jsdhjkdhsajkdh");
             Assert.False(result.HasSucceded);
-            Assert.Equal($"symbol {symbol} not exists in Binance", result.ErrorMessage);
+            Assert.Equal($"symbol {symbol} does not exist in Binance", result.ErrorMessage);
         }
     }
 }

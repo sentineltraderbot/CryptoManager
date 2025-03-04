@@ -25,7 +25,7 @@ public class SolanaIntegrationStrategyTest
         Assert.False(balances.HasSucceded);
     }
 
-    [Fact]
+    [Fact(Skip = "only for local tests")]
     public async Task Should_Return_Succeded_When_Transfer_Async()
     {
         var strategy = new SolanaIntegrationStrategy(ClientFactory.GetClient(Cluster.MainNet));
