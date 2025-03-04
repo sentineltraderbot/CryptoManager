@@ -1,0 +1,254 @@
+<form #form="ngForm" (ngSubmit)="save()" [@routerTransition]>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="card mb-3">
+        <div class="card-header">{{ title }}</div>
+        <div class="card-body">
+          <fieldset class="form-group">
+            <label>{{ "Exchange" | translate }}</label>
+            <ng-select
+              [items]="exchanges"
+              bindLabel="name"
+              bindValue="exchangeType"
+              [(ngModel)]="setupTrader.exchange"
+              appendTo="body"
+              name="exchange"
+              #exchange="ngModel"
+            >
+            </ng-select>
+            <div
+              *ngIf="exchange.invalid && (exchange.dirty || exchange.touched)"
+              class="alert alert-danger"
+            >
+              <div *ngIf="exchange.errors.required">
+                {{ "Field required" | translate }}
+              </div>
+            </div>
+          </fieldset>
+          <fieldset class="form-group">
+            <label>{{ "Strategy Name" | translate }}</label>
+            <input
+              class="form-control"
+              [(ngModel)]="setupTrader.strategyName"
+              name="strategyName"
+              #strategyName="ngModel"
+              required
+            />
+            <div
+              *ngIf="
+                strategyName.invalid &&
+                (strategyName.dirty || strategyName.touched)
+              "
+              class="alert alert-danger"
+            >
+              <div *ngIf="strategyName.errors.required">
+                {{ "Field required" | translate }}
+              </div>
+            </div>
+          </fieldset>
+          <fieldset class="form-group">
+            <label>{{ "Trading Strategy" | translate }}</label>
+            <ng-select
+              [items]="tradingStrategyTypes"
+              bindLabel="name"
+              bindValue="id"
+              [(ngModel)]="setupTrader.tradingStrategy"
+              #exchangeType="ngModel"
+              appendTo="body"
+              name="exchangeType"
+              required
+            >
+            </ng-select>
+            <div
+              *ngIf="
+                exchangeType.invalid &&
+                (exchangeType.dirty || exchangeType.touched)
+              "
+              class="alert alert-danger"
+            >
+              <div *ngIf="exchangeType.errors.required">
+                {{ "Field required" | translate }}
+              </div>
+            </div>
+          </fieldset>
+          <fieldset class="form-group">
+            <label>{{ "Quote Asset" | translate }}</label>
+            <ng-select
+              [items]="assets"
+              bindLabel="name"
+              bindValue="id"
+              (change)="onQuoteAssetChange($event)"
+              #quoteAsset
+              name="quoteAsset"
+              appendTo="body"
+            >
+            </ng-select>
+          </fieldset>
+          <fieldset class="form-group">
+            <label>{{ "Amount to Trade" | translate }}</label>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="setupTrader.amountToTrade"
+                name="amountToTrade"
+                required
+              />
+              <div
+                *ngIf="setupTrader.quoteAsset?.symbol"
+                class="input-group-append"
+              >
+                <span class="input-group-text">{{
+                  setupTrader.quoteAsset?.symbol
+                }}</span>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset class="form-group">
+            <label>{{ "Assets To Trade" | translate }}</label>
+            <ng-select
+              [items]="assets"
+              bindLabel="name"
+              bindValue="id"
+              appendTo="body"
+              [(ngModel)]="selectedAssetToTradeId"
+              name="assetToTrade"
+              #assetToTrade="ngModel"
+            >
+            </ng-select>
+            <button
+              type="button"
+              class="btn btn-primary w-100"
+              [disabled]="!selectedAssetToTradeId"
+              (click)="addAssetToTrade()"
+            >
+              {{ "Add" | translate }}
+            </button>
+            <ng-container
+              *ngFor="
+                let assetToTrade of setupTrader.assetsToTrade;
+                trackBy: trackByAssetId;
+                let i = index
+              "
+            >
+              <div class="mb-3 border p-3">
+                <!-- Priority Section -->
+                <div class="d-flex align-items-center mb-2">
+                  <span class="me-2">{{ "Priority" | translate }}:</span>
+                  <span class="fw-bold">{{ assetToTrade.priorityOrder }}</span>
+                </div>
+
+                <!-- Symbol Section -->
+                <div class="d-flex align-items-center mb-2">
+                  <span class="me-2">{{ "Symbol" | translate }}:</span>
+                  <span class="fw-bold">{{ assetToTrade.asset.symbol }}</span>
+                </div>
+
+                <!-- Remove Button -->
+                <button
+                  type="button"
+                  class="btn btn-danger w-100"
+                  (click)="removeAssetToTrade(assetToTrade.asset.externalId)"
+                  [attr.aria-label]="'Remove ' + assetToTrade.asset.symbol"
+                >
+                  {{ "Remove" | translate }} {{ assetToTrade.asset.symbol }}
+                </button>
+              </div>
+            </ng-container>
+          </fieldset>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-secondary" [disabled]="form.invalid">
+        {{ "Save" | translate }}
+      </button>
+      <button
+        class="btn btn-secondary"
+        [routerLink]="['/sentinel-trader/robo-trader-setup']"
+      >
+        {{ "Back" | translate }}
+      </button>
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">{{ "Strategies" | translate }}</div>
+        <div class="card-body">
+          <fieldset class="form-group">
+            <label>{{ "Indicator" | translate }}</label>
+            <ng-select
+              [items]="indicatorTypes"
+              bindLabel="name"
+              bindValue="id"
+              appendTo="body"
+              [(ngModel)]="selectedIndicatorType"
+              name="indicatorType"
+            >
+            </ng-select>
+          </fieldset>
+          <button
+            type="button"
+            class="btn btn-primary mt-2"
+            [disabled]="!selectedIndicatorType"
+            (click)="addIndicatorToStart()"
+          >
+            {{ "Add Indicator" | translate }}
+          </button>
+          <app-indicator
+            [indicators]="setupTrader.smaIndicatorsToStart"
+            title="SMA Indicators"
+            (remove)="
+              removeIndicatorToStart(indicatorType.SimpleMovingAverage, $event)
+            "
+            [indicatorType]="indicatorType.SimpleMovingAverage"
+          ></app-indicator>
+          <app-indicator
+            [indicators]="setupTrader.emaIndicatorsToStart"
+            title="EMA Indicators"
+            (remove)="
+              removeIndicatorToStart(
+                indicatorType.ExponentialMovingAverage,
+                $event
+              )
+            "
+            [indicatorType]="indicatorType.ExponentialMovingAverage"
+          ></app-indicator>
+          <app-indicator
+            [indicators]="setupTrader.priceIndicatorsToStart"
+            title="Price Indicators"
+            (remove)="removeIndicatorToStart(indicatorType.Price, $event)"
+            [indicatorType]="indicatorType.Price"
+          ></app-indicator>
+          <app-indicator
+            [indicators]="setupTrader.rsiIndicatorsToStart"
+            title="RSI Indicators"
+            (remove)="
+              removeIndicatorToStart(
+                indicatorType.RelativeStrengthIndex,
+                $event
+              )
+            "
+            [indicatorType]="indicatorType.RelativeStrengthIndex"
+          ></app-indicator>
+          <app-indicator
+            [indicators]="setupTrader.bollingerBandsIndicatorsToStart"
+            title="Bollinger Bands Indicators"
+            (remove)="
+              removeIndicatorToStart(indicatorType.BollingerBands, $event)
+            "
+            [indicatorType]="indicatorType.BollingerBands"
+          ></app-indicator>
+          <app-indicator
+            [indicators]="setupTrader.mlSdcaLogisticRegressionsToStart"
+            title="ML SDCA Logistic Regressions"
+            (remove)="
+              removeIndicatorToStart(
+                indicatorType.MLSdcaLogisticRegression,
+                $event
+              )
+            "
+            [indicatorType]="indicatorType.MLSdcaLogisticRegression"
+          ></app-indicator>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

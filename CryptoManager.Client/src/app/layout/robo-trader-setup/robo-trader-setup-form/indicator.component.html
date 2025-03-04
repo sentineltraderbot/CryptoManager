@@ -1,0 +1,250 @@
+<fieldset class="form-group" *ngIf="indicators?.length ?? 0 > 0">
+  <div class="card mb-3">
+    <div class="card-header">{{ title | translate }}</div>
+    <div class="card-body">
+      <ng-container *ngFor="let indicator of indicators; let i = index">
+        <div class="mb-3 border p-3">
+          <fieldset class="form-group">
+            <div>
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="indicator.isHolding"
+                  name="isHolding_{{ i }}"
+                />
+                {{ "Holding Trigger" | translate }}
+              </label>
+            </div>
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.Interval)"
+          >
+            <label>{{ "Interval" | translate }}</label>
+            <ng-select
+              [items]="intervalTypes"
+              bindLabel="name"
+              bindValue="id"
+              [(ngModel)]="indicator.interval"
+              appendTo="body"
+              name="interval_{{ i }}"
+            >
+            </ng-select>
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.Crossing)"
+          >
+            <label>{{ "Crossing" | translate }}</label>
+            <ng-select
+              [items]="crossingTypes"
+              bindLabel="name"
+              bindValue="id"
+              [(ngModel)]="indicator.crossing"
+              appendTo="body"
+              name="crossing_{{ i }}"
+            >
+            </ng-select>
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.HasJustCrossed)"
+          >
+            <div>
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="indicator.hasJustCrossed"
+                  name="hasJustCrossed_{{ i }}"
+                />
+                {{ "Just Crossed" | translate }}
+              </label>
+            </div>
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.Period)"
+          >
+            <label>{{ "Period" | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="indicator.period1"
+              name="period_{{ i }}"
+              required
+            />
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.Period1)"
+          >
+            <label>{{ "Period 1" | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="indicator.period1"
+              name="period1_{{ i }}"
+              required
+            />
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.Period2)"
+          >
+            <label>{{ "Period 2" | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="indicator.period2"
+              name="period2_{{ i }}"
+              required
+            />
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.RSIThreshold)"
+          >
+            <label>{{ "RSI Threshold" | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="indicator.rsiThreshold"
+              name="rsiThreshold_{{ i }}"
+              required
+            />
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.IncludeCurrentPrice)"
+          >
+            <div>
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="indicator.includeCurrentPrice"
+                  name="includeCurrentPrice_{{ i }}"
+                />
+                {{ "Include Current Price" | translate }}
+              </label>
+            </div>
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.PercentageChange)"
+          >
+            <label>{{ "Percentage Change" | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="indicator.percentageChange"
+              name="percentageChange_{{ i }}"
+              required
+            />
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.AmountChange)"
+          >
+            <label>{{ "Amount Change" | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="indicator.amountChange"
+              name="amountChange_{{ i }}"
+              required
+            />
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.PriceTarget)"
+          >
+            <label>{{ "Price Target" | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="indicator.priceTarget"
+              name="priceTarget_{{ i }}"
+              required
+            />
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.TrailingStopPercentage)"
+          >
+            <label>{{ "Trailing Stop Percentage" | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="indicator.trailingStopPercentage"
+              name="trailingStopPercentage_{{ i }}"
+              required
+            />
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.IsBuy)"
+          >
+            <div>
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="indicator.isBuy"
+                  name="isBuy_{{ i }}"
+                />
+                {{ "Buy" | translate }}
+              </label>
+            </div>
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.Length)"
+          >
+            <label>{{ "Length" | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="indicator.length"
+              name="length_{{ i }}"
+              required
+            />
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.Multiplier)"
+          >
+            <label>{{ "Multiplier" | translate }}</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="indicator.multiplier"
+              name="multiplier_{{ i }}"
+              required
+            />
+          </fieldset>
+          <fieldset
+            class="form-group"
+            *ngIf="isVisible(IndicatorFieldType.CrossingBand)"
+          >
+            <label>{{ "Crossing Band" | translate }}</label>
+            <ng-select
+              [items]="BollingerBandTypes"
+              bindLabel="name"
+              bindValue="id"
+              [(ngModel)]="indicator.crossingBand"
+              appendTo="body"
+              name="crossingBand_{{ i }}"
+            >
+            </ng-select>
+          </fieldset>
+          <button
+            type="button"
+            class="btn btn-danger w-100"
+            (click)="removeIndicator(i)"
+          >
+            {{ "Remove" | translate }}
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</fieldset>

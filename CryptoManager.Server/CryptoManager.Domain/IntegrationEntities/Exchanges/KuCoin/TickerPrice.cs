@@ -2,6 +2,7 @@
 {
     public class TickerPrice
     {
-        public string Price { get; set; }
+        public string Symbol { get; set; }
+        public string Last { get; set; }
     }
 }

@@ -1,14 +1,15 @@
 <nav class="sidebar" [ngClass]="{ sidebarPushRight: isActive }">
   <div class="list-group">
     <a
-      routerLink="/dashboard"
+      routerLink="dashboard"
       [routerLinkActive]="['router-link-active']"
       class="list-group-item"
     >
       <i class="fa fa-fw fa-dashboard"></i>{{ "Dashboard" | translate }}
     </a>
     <a
-      routerLink="/exchange"
+      [hidden]="!userToken.isAdmin"
+      routerLink="exchange"
       [routerLinkActive]="['router-link-active']"
       class="list-group-item"
     >
@@ -16,28 +17,36 @@
       >{{ "Exchanges Register" | translate }}
     </a>
     <a
-      routerLink="/asset"
+      [hidden]="!userToken.isAdmin"
+      routerLink="asset"
       [routerLinkActive]="['router-link-active']"
       class="list-group-item"
     >
       <i class="fa fa-fw fa-money"></i>{{ "Assets Register" | translate }}
     </a>
     <a
-      routerLink="/order"
+      routerLink="order"
       [routerLinkActive]="['router-link-active']"
       class="list-group-item"
     >
       <i class="fa fa-fw fa-bitcoin"></i>{{ "My Investments" | translate }}
     </a>
     <a
-      routerLink="/robo-trader-order"
+      routerLink="robo-trader-setup"
       [routerLinkActive]="['router-link-active']"
       class="list-group-item"
     >
-      <i class="fa fa-fw fa-android"></i>{{ "Robo Trader Trades" | translate }}
+      <i class="fa fa-fw fa-wrench"></i>{{ "Robot Trader Setup" | translate }}
     </a>
     <a
-      routerLink="/back-test-trader-order"
+      routerLink="robo-trader-order"
+      [routerLinkActive]="['router-link-active']"
+      class="list-group-item"
+    >
+      <i class="fa fa-fw fa-android"></i>{{ "Robot Trader Trades" | translate }}
+    </a>
+    <a
+      routerLink="back-test-trader-order"
       [routerLinkActive]="['router-link-active']"
       class="list-group-item"
     >
@@ -73,11 +82,11 @@
         <span>
           <img
             referrerpolicy="no-referrer"
-            [src]="currentUser.imageURL"
-            *ngIf="currentUser.imageURL"
+            [src]="userDetails?.imageURL"
+            *ngIf="userDetails?.imageURL"
             width="25px"
           />
-          {{ currentUser.username }}<b class="caret"></b>
+          {{ userDetails?.userName }}<b class="caret"></b>
         </span>
       </a>
       <li class="nested" [class.expand]="showMenu === 'profile'">

@@ -1,0 +1,45 @@
+<div class="row" [@routerTransition]>
+  <div class="col-sm-12">
+    <div class="card mb-3">
+      <div class="card-header">{{ "Setup Traders" | translate }}</div>
+      <div class="card-body">
+        <button routerLink="new" class="btn btn-secondary">
+          {{ "Add" | translate }}
+        </button>
+        <br />
+        <br />
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>{{ "Strategy Name" | translate }}</th>
+                <th>{{ "Edit" | translate }}</th>
+                <th>{{ "Delete" | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let setupTrader of setupTraders">
+                <td>{{ setupTrader.strategyName }}</td>
+                <td>
+                  <i
+                    [routerLink]="[setupTrader.id]"
+                    class="fa fa-fw fa-pencil-square-o"
+                  ></i>
+                </td>
+                <td>
+                  <i
+                    (click)="delete(setupTrader)"
+                    class="fa fa-fw fa-times"
+                  ></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button routerLink="new" class="btn btn-secondary">
+          {{ "Add" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

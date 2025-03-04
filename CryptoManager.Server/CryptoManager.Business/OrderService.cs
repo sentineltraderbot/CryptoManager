@@ -68,7 +68,7 @@ namespace CryptoManager.Business
 
                 if (priceResult.HasSucceded)
                 {
-                    currentPrice = priceResult.Item;
+                    currentPrice = priceResult.Item.Price;
                 }
                 else
                 {

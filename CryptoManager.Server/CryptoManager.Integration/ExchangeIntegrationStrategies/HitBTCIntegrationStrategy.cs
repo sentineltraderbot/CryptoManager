@@ -23,7 +23,7 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
             _hitBTCIntegrationClient = hitBTCIntegrationClient;
         }
 
-        public async Task<ObjectResult<decimal>> GetCurrentPriceAsync(string baseAssetSymbol, string quoteAssetSymbol)
+        public async Task<ObjectResult<TickerPriceDTO>> GetCurrentPriceAsync(string baseAssetSymbol, string quoteAssetSymbol)
         {
             var symbol = $"{baseAssetSymbol}{quoteAssetSymbol}";
             var price = await _cache.GetAsync<TickerPrice>(ExchangesIntegratedType.HitBTC, symbol);
@@ -34,10 +34,16 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
                 await _cache.AddAsync(listPrices, ExchangesIntegratedType.HitBTC, a => a.Symbol);
                 if (price == null)
                 {
-                    return ObjectResult<decimal>.Error($"symbol {symbol} not exists in HitBTC");
+                    return ObjectResult<TickerPriceDTO>.Error($"symbol {symbol} does not exist in HitBTC");
                 }
             }
-            return ObjectResult<decimal>.Success(string.IsNullOrWhiteSpace(price.Last) ? decimal.Zero : decimal.Parse(price.Last));
+            return ObjectResult<TickerPriceDTO>.Success(
+                new TickerPriceDTO
+                {
+                    Symbol = symbol,
+                    Price = string.IsNullOrWhiteSpace(price.Last) ? decimal.Zero : decimal.Parse(price.Last)
+                }
+            );
         }
 
         public async Task<SimpleObjectResult> TestIntegrationUpAsync()

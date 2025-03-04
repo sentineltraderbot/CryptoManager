@@ -1,42 +1,30 @@
 <nav class="navbar navbar-expand-lg fixed-top">
-  <a class="navbar-brand" href="#">Estou Rico</a>
+  <a class="navbar-brand" href="#">Sentinel Trader</a>
+  <app-token-balance-component
+    [userDetails]="userDetails"
+    class="d-block d-lg-none"
+  ></app-token-balance-component>
   <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
-    <!-- <span class="navbar-toggler-icon"></span> -->
     <i class="fa fa-bars text-muted" aria-hidden="true"></i>
   </button>
   <div class="collapse navbar-collapse">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item dropdown" ngbDropdown>
-        <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
-          <i class="fa fa-language"></i> {{ "Language" | translate }}
-          <b class="caret"></b>
-        </a>
-        <div class="dropdown-menu-right" ngbDropdownMenu>
-          <a
-            class="dropdown-item"
-            href="javascript:void(0)"
-            (click)="changeLang('en')"
-          >
-            {{ "English" | translate }}
-          </a>
-          <a
-            class="dropdown-item"
-            href="javascript:void(0)"
-            (click)="changeLang('pt')"
-          >
-            {{ "Portuguese" | translate }}
-          </a>
-        </div>
+      <li class="nav-item">
+        <app-token-balance-component
+          [userDetails]="userDetails"
+          (userDetailsChanged)="getUserDetails($event)"
+        ></app-token-balance-component>
       </li>
       <li class="nav-item dropdown" ngbDropdown>
         <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
           <img
-            [src]="currentUser.imageURL"
-            *ngIf="currentUser.imageURL"
+            [src]="userDetails?.imageURL"
+            *ngIf="userDetails?.imageURL"
             width="25px"
             referrerpolicy="no-referrer"
           />
-          {{ currentUser.username }}<b class="caret"></b>
+          <span class="header-text">{{ userDetails?.userName }}</span>
+          <b class="caret"></b>
         </a>
         <div class="dropdown-menu-right" ngbDropdownMenu>
           <a class="dropdown-item" [routerLink]="['/health']">
@@ -45,8 +33,31 @@
           <a class="dropdown-item" [routerLink]="['/privacy-policy']">
             <i class="fa fa-fw fa-lock"></i> {{ "Privacy Policy" | translate }}
           </a>
-          <a class="dropdown-item" (click)="onLoggedout()">
+          <a
+            class="dropdown-item"
+            href="javascript:void(0)"
+            (click)="onLoggedout()"
+          >
             <i class="fa fa-fw fa-power-off"></i> {{ "Log Out" | translate }}
+          </a>
+          <hr />
+          <a class="dropdown-item">
+            <i class="fa fa-fw fa-language"></i>
+            {{ "Language" | translate }}
+          </a>
+          <a
+            class="dropdown-item header-menu"
+            href="javascript:void(0)"
+            (click)="changeLang('en')"
+          >
+            {{ "English" | translate }}
+          </a>
+          <a
+            class="dropdown-item header-menu"
+            href="javascript:void(0)"
+            (click)="changeLang('pt')"
+          >
+            {{ "Portuguese" | translate }}
           </a>
         </div>
       </li>

@@ -33,7 +33,7 @@ namespace CryptoManager.Integration.Test
 
             var strategy = new BinanceIntegrationStrategy(cacheMock.Object, clientMock.Object);
             var price = await strategy.GetCurrentPriceAsync("LTC","BTC");
-            Assert.True(price.Item > 0);
+            Assert.True(price.Item.Price > 0);
         }
 
 

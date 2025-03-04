@@ -1,0 +1,60 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ "Solana Wallet Connection" | translate }}</h4>
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div>
+    <select [ngModel]="walletName" (ngModelChange)="onSelectWallet($event)">
+      <option [ngValue]="null">Not selected</option>
+      <option *ngFor="let wallet of wallets" [ngValue]="wallet.adapter.name">
+        {{ wallet.adapter.name }} ({{ wallet.readyState }})
+      </option>
+    </select>
+  </div>
+  <button
+    type="button"
+    class="btn"
+    [disabled]="
+      solanaWalletService.isSolanaWalletConnected() ||
+      !this.solanaWalletService.getWallet()
+    "
+    (click)="onConnect()"
+  >
+    Connect
+  </button>
+  <button
+    type="button"
+    class="btn"
+    [disabled]="!solanaWalletService.isSolanaWalletConnected()"
+    (click)="onDisconnect()"
+  >
+    Disconnect
+  </button>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-secondary"
+    [disabled]="
+      !solanaWalletService.isSolanaWalletConnected() ||
+      !this.solanaWalletService.getWallet().adapter?.publicKey == null
+    "
+    (click)="onClaimAirdrop()"
+  >
+    {{ "Claim Airdrop" | translate }}
+  </button>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    (click)="activeModal.close(false)"
+  >
+    {{ "Cancel" | translate }}
+  </button>
+</div>

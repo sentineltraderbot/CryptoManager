@@ -5,8 +5,9 @@
 
 export const environment = {
   api: {
-    baseUrl: "https://localhost:62329/api",
+    baseUrl: "https://192.168.1.254:62329/api",
     roboTraderBaseUrl: "https://localhost:7170/api",
+    solanaRpcUrl: "https://solana.api.onfinality.io/public",
     version: "1.0.0",
   },
   login: {

@@ -2,11 +2,13 @@
 using CryptoManager.Domain.Contracts.Integration;
 using CryptoManager.Domain.Contracts.Repositories;
 using CryptoManager.Domain.IntegrationEntities.Exchanges;
+using CryptoManager.Integration.BlockchainIntegrationStrategies;
 using CryptoManager.Integration.Clients;
 using CryptoManager.Integration.ExchangeIntegrationStrategies;
 using CryptoManager.Integration.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
+using Solnet.Rpc;
 
 namespace CryptoManager.Integration
 {
@@ -14,6 +16,7 @@ namespace CryptoManager.Integration
     {
         public static IServiceCollection AddIntegrations(this IServiceCollection services)
         {
+            //exchange integration strategies
             services.AddScoped<IExchangeIntegrationCache, ExchangeIntegrationCache>();
             services.AddScoped<IExchangeIntegrationStrategyContext, ExchangeIntegrationStrategyContext>();
             services.AddScoped<IExchangeIntegrationStrategy, BinanceIntegrationStrategy>();
@@ -21,6 +24,18 @@ namespace CryptoManager.Integration
             services.AddScoped<IExchangeIntegrationStrategy, CoinbaseIntegrationStrategy>();
             services.AddScoped<IExchangeIntegrationStrategy, HitBTCIntegrationStrategy>();
             services.AddScoped<IExchangeIntegrationStrategy, KuCoinIntegrationStrategy>();
+            services.AddScoped<IExchangeIntegrationTickersStrategy, KuCoinIntegrationStrategy>();
+            services.AddScoped<IExchangeIntegrationTickersStrategy, BitcoinTradeIntegrationStrategy>();
+            services.AddScoped<IExchangeIntegrationTickersStrategy, BinanceIntegrationStrategy>();
+
+            //blockchain integration strategies
+            services.AddScoped<IBlockchainIntegrationStrategyContext, BlockchainIntegrationStrategyContext>();
+            services.AddScoped<IBlockchainIntegrationStrategy, SolanaIntegrationStrategy>();
+
+            //solana blockchain client
+            services.AddSingleton(sp =>
+                ClientFactory.GetClient(Cluster.MainNet)
+            );
 
             //clients
             services.AddRefitClient<IBinanceIntegrationClient>()

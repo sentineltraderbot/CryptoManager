@@ -3,12 +3,13 @@ import { Observable, BehaviorSubject, ReplaySubject } from "rxjs";
 
 import { ApiService } from "./api.service";
 import { JwtService } from "./jwt.service";
-import { User } from "../models/user.model";
+import { UserToken } from "../models/user-token.model";
 import { distinctUntilChanged, map } from "rxjs/operators";
 import { JwtHelper } from "../helpers/index";
 import { HttpParams } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { ApiType } from "../models/api-type.enum";
+import { UserDetails } from "../models/user-details.model";
 declare const FB: any;
 
 @Injectable()
@@ -17,7 +18,7 @@ export class AccountService {
   public fbApiPermission: string[] = ["email"];
 
   public serviceURL = "/account";
-  private currentUserSubject = new BehaviorSubject<User>({} as User);
+  private currentUserSubject = new BehaviorSubject<UserToken>({} as UserToken);
   public currentUser = this.currentUserSubject
     .asObservable()
     .pipe(distinctUntilChanged());
@@ -43,7 +44,7 @@ export class AccountService {
     }
   }
 
-  setAuth(user: User) {
+  setAuth(user: UserToken) {
     this.jwtService.saveToken(user.token);
     this.currentUserSubject.next(user);
     this.isAuthenticatedSubject.next(true);
@@ -52,7 +53,7 @@ export class AccountService {
 
   purgeAuth() {
     this.jwtService.destroyToken();
-    this.currentUserSubject.next({} as User);
+    this.currentUserSubject.next({} as UserToken);
     this.isAuthenticatedSubject.next(false);
     localStorage.setItem("isLoggedin", "false");
     if (this.router.url != "/login") {
@@ -66,30 +67,30 @@ export class AccountService {
         if (response.status === "connected") {
           return this.authFacebookUser(
             response.authResponse.accessToken
-          ).subscribe(
-            (data) => {
+          ).subscribe({
+            next: (data) => {
               observer.next(data);
             },
-            (error) => {
+            error: (error) => {
               observer.error(error);
               this.purgeAuth();
-            }
-          );
+            },
+          });
         } else {
           FB.login(
             (loginResponse) => {
               if (loginResponse.status !== "not_authorized") {
                 return this.authFacebookUser(
                   loginResponse.authResponse.accessToken
-                ).subscribe(
-                  (data) => {
+                ).subscribe({
+                  next: (data) => {
                     observer.next(data);
                   },
-                  (error) => {
+                  error: (error) => {
                     observer.error(error);
                     this.purgeAuth();
-                  }
-                );
+                  },
+                });
               } else {
                 this.purgeAuth();
                 observer.error("User Not logged");
@@ -104,15 +105,15 @@ export class AccountService {
 
   googleLogin(token: string): Observable<boolean> {
     return new Observable<boolean>((observer) => {
-      return this.authGoogleUser(token).subscribe(
-        (data) => {
+      return this.authGoogleUser(token).subscribe({
+        next: (data) => {
           observer.next(data);
         },
-        (error) => {
+        error: (error) => {
           observer.error(error);
           this.purgeAuth();
-        }
-      );
+        },
+      });
     });
   }
 
@@ -152,7 +153,17 @@ export class AccountService {
       );
   }
 
-  getCurrentUser(): User {
+  getUserDetails(): Observable<UserDetails> {
+    return this.apiService
+      .get(this.serviceURL, null, ApiType.CryptoManagerServerApi)
+      .pipe(
+        map((data: UserDetails) => {
+          return data;
+        })
+      );
+  }
+
+  getCurrentUser(): UserToken {
     if (this.currentUserSubject.value) {
       return this.currentUserSubject.value;
     } else {
@@ -160,20 +171,9 @@ export class AccountService {
     }
   }
 
-  createUserModel(data: string): User {
+  createUserModel(data: string): UserToken {
     let tokenDecoded = this.jwtHelper.decodeToken(data);
-    let user: User = new User();
-    user.id = tokenDecoded.Id;
-    user.email = tokenDecoded.Email;
-    user.imageURL = tokenDecoded.PictureURL;
-    user.username = tokenDecoded.Name;
-    user.role =
-      tokenDecoded[
-        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-      ];
-    user.token = data;
-    user.isAdmin =
-      user.role != undefined ? user.role.indexOf("Administrator") > -1 : false;
+    let user: UserToken = new UserToken(tokenDecoded, data);
     return user;
   }
 }

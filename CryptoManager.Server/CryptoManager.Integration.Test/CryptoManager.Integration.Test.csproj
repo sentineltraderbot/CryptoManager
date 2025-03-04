@@ -7,19 +7,38 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="BifrostSecurity" Version="1.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="xunit" Version="2.9.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+    <!-- <PackageReference Include="Solnet.Wallet" Version="6.1.0" />
+    <PackageReference Include="Solnet.Rpc" Version="6.1.0" />
+    <PackageReference Include="Solnet.Extensions" Version="6.1.0" /> -->
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CryptoManager.Domain\CryptoManager.Domain.csproj" />
     <ProjectReference Include="..\CryptoManager.Integration\CryptoManager.Integration.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+     <Reference Include="Solnet.Wallet">
+       <HintPath>..\references\Solnet.Wallet.dll</HintPath>
+     </Reference>
+     <Reference Include="Solnet.Rpc">
+       <HintPath>..\references\Solnet.Rpc.dll</HintPath>
+     </Reference>
+     <Reference Include="Solnet.Extensions">
+       <HintPath>..\references\Solnet.Extensions.dll</HintPath>
+     </Reference>
+     <Reference Include="Solnet.Programs">
+       <HintPath>..\references\Solnet.Programs.dll</HintPath>
+     </Reference>
   </ItemGroup>
 
 </Project>

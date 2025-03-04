@@ -42,14 +42,7 @@ export class OrderFormComponent implements OnInit {
     private frmBuilder: FormBuilder,
     private alertHandlerService: AlertHandlerService,
     private modalService: NgbModal
-  ) {}
-
-  ngOnInit() {
-    this.exchangeService
-      .getAll()
-      .subscribe((items) => (this.exchanges = items));
-    this.assetService.getAll().subscribe((items) => (this.assets = items));
-
+  ) {
     this.orderGroup = this.frmBuilder.group({
       date: ["", [Validators.required]],
       exchange: ["", [Validators.required]],
@@ -63,6 +56,13 @@ export class OrderFormComponent implements OnInit {
       fee: ["", [Validators.required]],
       feeAsset: ["", [Validators.required]],
     });
+  }
+
+  ngOnInit() {
+    this.exchangeService
+      .getAll()
+      .subscribe((items) => (this.exchanges = items));
+    this.assetService.getAll().subscribe((items) => (this.assets = items));
   }
 
   get date() {
@@ -128,19 +128,19 @@ export class OrderFormComponent implements OnInit {
     this.order.orderItems = this.orderItems;
     let result = this.orderService.add(this.order);
 
-    result.subscribe(
-      (_) => {
+    result.subscribe({
+      next: (_) => {
         this.alertHandlerService.createAlert(
           AlertType.Success,
           "Order Created"
         );
-        this.router.navigate(["order"]);
+        this.router.navigate(["/sentinel-trader/order"]);
       },
-      () =>
+      error: () =>
         this.alertHandlerService.createAlert(
           AlertType.Danger,
           this.translate.instant("CouldNotProcess")
-        )
-    );
+        ),
+    });
   }
 }

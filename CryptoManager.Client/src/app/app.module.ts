@@ -10,6 +10,7 @@ import {
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { FormsModule } from "@angular/forms";
+import { HdWalletAdapterModule } from "@heavy-duty/wallet-adapter";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -30,7 +31,11 @@ import {
   BackTestSetupTraderService,
   SharedPipesModule,
   ChartService,
+  TickerService,
+  SolanaWalletService,
+  SentinelTraderBotTokenService,
 } from "./shared";
+import { CookieConsentComponent } from "./cookie-consent/cookie-consent.component";
 
 const Interceptors_Services = [HttpErrorInterceptor, HTTPStatus];
 // AoT requires an exported function for factories
@@ -56,8 +61,9 @@ export function createTranslateLoader(http: HttpClient) {
     AppRoutingModule,
     FormsModule,
     SharedPipesModule,
+    HdWalletAdapterModule.forRoot({ autoConnect: true }),
   ],
-  declarations: [AppComponent],
+  declarations: [AppComponent, CookieConsentComponent],
   providers: [
     ApiService,
     AuthGuard,
@@ -72,6 +78,9 @@ export function createTranslateLoader(http: HttpClient) {
     HealthService,
     AlertHandlerService,
     ChartService,
+    TickerService,
+    SolanaWalletService,
+    SentinelTraderBotTokenService,
     Interceptors_Services,
     {
       provide: HTTP_INTERCEPTORS,

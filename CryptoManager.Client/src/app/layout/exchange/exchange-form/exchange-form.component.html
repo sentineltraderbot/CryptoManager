@@ -98,7 +98,10 @@
           >
             {{ "Save" | translate }}
           </button>
-          <button class="btn btn-secondary" routerLink="/exchange">
+          <button
+            class="btn btn-secondary"
+            [routerLink]="['/sentinel-trader/exchange']"
+          >
             {{ "Back" | translate }}
           </button>
         </form>

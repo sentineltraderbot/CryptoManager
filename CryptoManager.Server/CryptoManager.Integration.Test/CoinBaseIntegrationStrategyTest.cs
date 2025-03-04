@@ -35,7 +35,7 @@ namespace CryptoManager.Integration.Test
 
             var strategy = new CoinbaseIntegrationStrategy(cacheMock.Object, clientMock.Object);
             var price = await strategy.GetCurrentPriceAsync("BTC", "GBP");
-            Assert.Equal(1, price.Item);
+            Assert.Equal(1, price.Item.Price);
         }
 
 
@@ -59,7 +59,7 @@ namespace CryptoManager.Integration.Test
 
             var strategy = new CoinbaseIntegrationStrategy(cacheMock.Object, clientMock.Object);
             var price = await strategy.GetCurrentPriceAsync("nuncatera", "jsdhjkdhsajkdh");
-            Assert.Equal(0, price.Item);
+            Assert.Equal(0, price.Item.Price);
         }
     }
 }

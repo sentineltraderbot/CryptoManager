@@ -66,6 +66,7 @@ namespace CryptoManager.WebApi
                 .AddCheck<ExchangeIntegrationHealthCheck>("ExchangeIntegrationPing");
 
             services.AddSingleton<JwtFactory>();
+            services.AddSingleton(_configuration);
 
             services.AddCors();
 

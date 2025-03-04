@@ -24,14 +24,14 @@ export class OrderComponent implements OnInit {
   ngOnInit() {
     this.orderService
       .getAllByLoggedUser({ isBackTest: false, isViaRoboTrader: false })
-      .subscribe(
-        (data) => (this.orders = data),
-        () =>
+      .subscribe({
+        next: (data) => (this.orders = data),
+        error: () =>
           this.alertHandlerService.createAlert(
             AlertType.Danger,
             this.translate.instant("CouldNotProcess")
-          )
-      );
+          ),
+      });
   }
 
   getProfitColor(profit: number) {
@@ -53,21 +53,21 @@ export class OrderComponent implements OnInit {
         if (userResponse) {
           var index = this.orders.indexOf(order);
           this.orders.splice(index, 1);
-          this.orderService.delete(order.id).subscribe(
-            () =>
+          this.orderService.delete(order.id).subscribe({
+            next: () =>
               this.alertHandlerService.createAlert(
                 AlertType.Success,
                 "Order Deleted"
               ),
-            () => {
+            error: () => {
               this.alertHandlerService.createAlert(
                 AlertType.Danger,
                 this.translate.instant("CouldNotProcess")
               );
               // Revert the view back to its original state
               this.orders.splice(index, 0, order);
-            }
-          );
+            },
+          });
         }
       })
       .catch((error) => console.log(`User aborted: ${error}`));

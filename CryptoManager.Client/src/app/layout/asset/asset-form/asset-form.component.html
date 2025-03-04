@@ -1,44 +1,91 @@
 <div class="row" [@routerTransition]>
-    <div class="col-sm-12">
-        <div class="card mb-3">
-            <div class="card-header">{{ title }}</div>
-            <div class="card-body">
-              <form #form="ngForm" (ngSubmit)="save()">                  
-                  <fieldset class="form-group">
-                    <label>{{ 'Symbol' | translate }}</label>
-                    <input class="form-control" [(ngModel)]="asset.symbol" name="symbol" #symbol="ngModel" required>
-                    <div *ngIf="symbol.invalid && (symbol.dirty || symbol.touched)" class="alert alert-danger">                 
-                      <div *ngIf="symbol.errors.required">
-                        {{ "Field required" | translate }}
-                      </div>
-                    </div>
-                  </fieldset>
-                  <fieldset class="form-group">
-                      <label>{{ 'Name' | translate }}</label>
-                      <input class="form-control" [(ngModel)]="asset.name" name="name" #name="ngModel" required>
-                      <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">                 
-                        <div *ngIf="name.errors.required">
-                          {{ "Field required" | translate }}
-                        </div>
-                      </div>
-                    </fieldset>
-                  <fieldset class="form-group">
-                    <label>{{ 'Description' | translate }}</label>
-                    <input class="form-control" [(ngModel)]="asset.description" name="description" #description="ngModel" required>
-                    <div *ngIf="description.invalid && (description.dirty || description.touched)" class="alert alert-danger">                 
-                      <div *ngIf="description.errors.required">
-                        {{ "Field required" | translate }}
-                      </div>
-                    </div>
-                  </fieldset>
-                  <fieldset class="form-group" [hidden]="formState == 'Add'">
-                    <input type="checkbox" [(ngModel)]="asset.isEnabled" name="isEnabled">
-                    <label>{{ 'Enabled' | translate }}</label>
-                  </fieldset>
-                  <button type="submit" class="btn btn-secondary" [disabled]="form.invalid">{{ 'Save' | translate }}</button>
-                  <button class="btn btn-secondary" routerLink="/asset">{{ 'Back' | translate }}</button>
-              </form>
+  <div class="col-sm-12">
+    <div class="card mb-3">
+      <div class="card-header">{{ title }}</div>
+      <div class="card-body">
+        <form #form="ngForm" (ngSubmit)="save()">
+          <fieldset class="form-group">
+            <label>{{ "Symbol" | translate }}</label>
+            <input
+              class="form-control"
+              [(ngModel)]="asset.symbol"
+              name="symbol"
+              #symbol="ngModel"
+              required
+            />
+            <div
+              *ngIf="symbol.invalid && (symbol.dirty || symbol.touched)"
+              class="alert alert-danger"
+            >
+              <div *ngIf="symbol.errors.required">
+                {{ "Field required" | translate }}
+              </div>
             </div>
-        </div>
+          </fieldset>
+          <fieldset class="form-group">
+            <label>{{ "Name" | translate }}</label>
+            <input
+              class="form-control"
+              [(ngModel)]="asset.name"
+              name="name"
+              #name="ngModel"
+              required
+            />
+            <div
+              *ngIf="name.invalid && (name.dirty || name.touched)"
+              class="alert alert-danger"
+            >
+              <div *ngIf="name.errors.required">
+                {{ "Field required" | translate }}
+              </div>
+            </div>
+          </fieldset>
+          <fieldset class="form-group">
+            <label>{{ "Description" | translate }}</label>
+            <input
+              class="form-control"
+              [(ngModel)]="asset.description"
+              name="description"
+              #description="ngModel"
+              required
+            />
+            <div
+              *ngIf="
+                description.invalid &&
+                (description.dirty || description.touched)
+              "
+              class="alert alert-danger"
+            >
+              <div *ngIf="description.errors.required">
+                {{ "Field required" | translate }}
+              </div>
+            </div>
+          </fieldset>
+          <fieldset class="form-group" [hidden]="formState == 'Add'">
+            <label
+              ><input
+                type="checkbox"
+                [(ngModel)]="asset.isEnabled"
+                name="isEnabled"
+              />
+              {{ "Enabled" | translate }}</label
+            >
+          </fieldset>
+          <button
+            type="submit"
+            class="btn btn-secondary"
+            [disabled]="form.invalid"
+          >
+            {{ "Save" | translate }}
+          </button>
+          <button
+            class="btn btn-secondary"
+            [routerLink]="['/sentinel-trader/asset']"
+          >
+            {{ "Back" | translate }}
+          </button>
+        </form>
+      </div>
     </div>
+  </div>
 </div>

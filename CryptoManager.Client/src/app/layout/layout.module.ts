@@ -9,6 +9,9 @@ import { LayoutComponent } from "./layout.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { HeaderComponent } from "./components/header/header.component";
 import { AlertModule, SharedPipesModule } from "../shared";
+import { FormsModule } from "@angular/forms";
+import { SolanaWalletConnectorModalComponent } from "./solana-wallet-connector-modal/solana-wallet-connector-modal.component";
+import { TokenBalanceComponent } from "./components/token-balance/token-balance.component";
 
 @NgModule({
   imports: [
@@ -19,7 +22,14 @@ import { AlertModule, SharedPipesModule } from "../shared";
     NgbModule,
     AlertModule,
     SharedPipesModule,
+    FormsModule,
   ],
-  declarations: [LayoutComponent, SidebarComponent, HeaderComponent],
+  declarations: [
+    LayoutComponent,
+    SidebarComponent,
+    HeaderComponent,
+    SolanaWalletConnectorModalComponent,
+    TokenBalanceComponent,
+  ],
 })
 export class LayoutModule {}

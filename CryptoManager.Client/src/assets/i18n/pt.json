@@ -77,6 +77,9 @@
   "Sold": "Vendido",
   "Live": "Tempo Real",
   "Privacy Policy": "Política de Privacidade",
-  "Robot Trader Trades": "Robot Trader Trades",
-  "Back Test Trader Trades": "Back Test Trader Trades"
+  "Robot Trader Trades": "Robo Trader Trades",
+  "Back Test Trader Trades": "Back Test Trader Trades",
+  "Prices": "Preços",
+  "Auto Update": "Atualização Automática",
+  "Robot Trader Setup": "Configuração de Robo Trader"
 }

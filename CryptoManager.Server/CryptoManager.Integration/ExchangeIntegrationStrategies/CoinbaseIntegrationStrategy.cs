@@ -22,7 +22,7 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
             _coinbaseIntegrationClient = coinbaseIntegrationClient;
         }
 
-        public async Task<ObjectResult<decimal>> GetCurrentPriceAsync(string baseAssetSymbol, string quoteAssetSymbol)
+        public async Task<ObjectResult<TickerPriceDTO>> GetCurrentPriceAsync(string baseAssetSymbol, string quoteAssetSymbol)
         {
             var symbol = $"{baseAssetSymbol}-{quoteAssetSymbol}";
             var price = await _cache.GetAsync<TickerPrice>(ExchangesIntegratedType.Coinbase, symbol);
@@ -31,11 +31,17 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
                 price = await _coinbaseIntegrationClient.GetTickerPriceAsync(symbol);
                 if(price == null)
                 {
-                    return ObjectResult<decimal>.Error($"symbol {symbol} not exists in Coinbase");
+                    return ObjectResult<TickerPriceDTO>.Error($"symbol {symbol} does not exist in Coinbase");
                 }
                 await _cache.AddAsync(price, ExchangesIntegratedType.Coinbase, symbol);
             }
-            return ObjectResult<decimal>.Success(decimal.Parse(price.Price));
+            return ObjectResult<TickerPriceDTO>.Success(
+                new TickerPriceDTO
+                {
+                    Symbol = symbol.Replace("-", string.Empty),
+                    Price = decimal.Parse(price.Price)
+                }
+            );
         }
 
         public async Task<SimpleObjectResult> TestIntegrationUpAsync()

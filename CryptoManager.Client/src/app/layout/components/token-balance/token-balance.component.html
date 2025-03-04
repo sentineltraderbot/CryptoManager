@@ -1,0 +1,23 @@
+<div class="list-group balance-airdrop">
+  <a
+    *ngIf="userDetails?.hasReceivedAirdrop === false"
+    class="list-group-item"
+    href="javascript:void(0)"
+    (click)="openSolanaWalletConnectorModal()"
+  >
+    <i class="fa fa-fw fa-wallet"></i>
+    <b>🚀 {{ "Link Wallet for Airdrop" | translate }}</b>
+  </a>
+  <span
+    class="list-group-item"
+    *ngIf="
+      sentinelTraderBotTokenValue != null &&
+      userDetails?.hasReceivedAirdrop === true &&
+      userDetails?.solanaWalletAddress != null
+    "
+  >
+    {{ sentinelTraderBotTokenValue | number : "1.2-2" }}
+    <img src="favicon.ico" width="16px" referrerpolicy="no-referrer" />
+    {{ tokenSymbol }}
+  </span>
+</div>

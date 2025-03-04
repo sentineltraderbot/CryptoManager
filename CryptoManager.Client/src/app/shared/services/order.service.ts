@@ -1,12 +1,13 @@
 import { Injectable } from "@angular/core";
-import { Observable, BehaviorSubject, ReplaySubject } from "rxjs";
+import { Observable } from "rxjs";
 
 import { ApiService } from "./api.service";
-import { ApiType, Order } from "../models/index";
-import { distinctUntilChanged, map } from "rxjs/operators";
-import { HttpParams } from "@angular/common/http";
-import { OrderDetail } from "../models/orderDetail.model";
-import { GetOrdersCriteria } from "../models/get-orders-criteria.model";
+import {
+  ApiType,
+  Order,
+  OrderDetail,
+  GetOrdersCriteria,
+} from "../models/index";
 
 @Injectable()
 export class OrderService {

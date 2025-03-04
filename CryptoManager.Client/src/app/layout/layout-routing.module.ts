@@ -33,6 +33,13 @@ const routes: Routes = [
           import("./order/order.module").then((m) => m.OrderModule),
       },
       {
+        path: "robo-trader-setup",
+        loadChildren: () =>
+          import("./robo-trader-setup/robo-trader-setup.module").then(
+            (m) => m.RoboTraderSetupModule
+          ),
+      },
+      {
         path: "robo-trader-order",
         loadChildren: () =>
           import("./robo-trader-order/robo-trader-order.module").then(

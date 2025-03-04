@@ -1,0 +1,210 @@
+/* General Styles */
+.landing-page {
+  background-color: #0a0a0a;
+  color: #fff;
+  font-family: "Arial", sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+.header {
+  position: sticky;
+  top: 0;
+  background-color: #0a0a0a;
+  padding: 1rem 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header .logo {
+  font-size: 1.5em;
+  font-weight: bold;
+  background: linear-gradient(90deg, #00ffaa, #0077ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  span {
+    padding-left: 10px;
+  }
+}
+
+.header .nav {
+  display: flex;
+  gap: 15px;
+}
+
+.header .nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.header .nav a:hover {
+  color: #00ffaa;
+}
+
+/* Hamburger Menu Icon */
+.header .menu-toggle {
+  display: none; /* Hidden by default */
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+/* Mobile Navigation */
+@media (max-width: 768px) {
+  .header .nav {
+    display: none; /* Hide nav links on mobile */
+    flex-direction: column;
+    background-color: #151515;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+  }
+
+  .header .logo {
+    font-size: 1.2em; /* Reduce logo size on mobile */
+    display: inline-block;
+  }
+
+  .header .nav.active {
+    display: flex; /* Show nav links when active */
+  }
+
+  .header .menu-toggle {
+    display: inline-block; /* Show hamburger icon on mobile */
+    position: absolute;
+    right: 10px;
+  }
+
+  /* Ensure the menu-toggle is aligned to the end */
+  .header .container {
+    justify-content: space-between; /* Logo on the left, menu-toggle on the right */
+    display: inline;
+  }
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #0077ff, #00ffaa);
+  padding: 100px 20px;
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+.hero-section .hero {
+  font-size: 2.5em; /* Reduced for mobile */
+  font-weight: bold;
+  background: linear-gradient(90deg, #fff, #e0e0e0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-section p {
+  font-size: 1em; /* Reduced for mobile */
+  margin: 20px 0;
+}
+
+/* Button */
+.button {
+  background: linear-gradient(90deg, #00ffaa, #0077ff);
+  color: #fff;
+  padding: 12px 25px;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+  border-radius: 8px;
+  font-size: 1em; /* Reduced for mobile */
+  font-weight: bold;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0, 255, 170, 0.8);
+}
+
+/* Sections */
+.section {
+  padding: 50px 20px; /* Reduced padding for mobile */
+  max-width: 900px;
+  margin: auto;
+  text-align: left;
+}
+
+.section h2 {
+  font-size: 2em; /* Reduced for mobile */
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #00ffaa, #0077ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Roadmap */
+.roadmap {
+  background-color: #151515;
+  padding: 20px; /* Reduced padding for mobile */
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+}
+
+.roadmap-item {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.phase-icon {
+  font-size: 1.2em; /* Reduced for mobile */
+  margin-right: 10px;
+}
+
+/* Whitepaper */
+.whitepaper {
+  background-color: #151515;
+  padding: 20px; /* Reduced padding for mobile */
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+}
+
+/* Social Media */
+.social-media {
+  padding: 30px 20px; /* Reduced padding for mobile */
+  background-color: #151515;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Reduced gap for mobile */
+}
+
+.social-link img {
+  width: 35px; /* Reduced size for mobile */
+  height: 35px;
+  transition: transform 0.3s ease;
+}
+
+.social-link img:hover {
+  transform: scale(1.2);
+}
+
+/* Footer */
+.footer {
+  padding: 15px; /* Reduced padding for mobile */
+  background-color: #151515;
+  text-align: center;
+  margin-top: 30px; /* Reduced margin for mobile */
+}

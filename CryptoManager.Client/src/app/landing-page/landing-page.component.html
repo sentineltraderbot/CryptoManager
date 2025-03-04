@@ -1,0 +1,91 @@
+<div class="landing-page">
+  <!-- Sticky Header -->
+  <header class="header">
+    <div class="container">
+      <h1 class="logo">
+        <img src="favicon.ico" width="16px" referrerpolicy="no-referrer" />
+        <span>Sentinel Trader Bot</span>
+      </h1>
+      <nav class="nav">
+        <a href="#roadmap">Roadmap</a>
+        <a href="#whitepaper">Whitepaper</a>
+        <a href="#social-media">Social Media</a>
+      </nav>
+      <div class="menu-toggle" (click)="toggleMenu()">
+        <i class="fa fa-bars text-muted" aria-hidden="true"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="container">
+      <h1 class="hero">Sentinel Trader Bot</h1>
+      <h2>The Next-Generation Trading Automation</h2>
+      <p>Powered by AI and Blockchain Integration</p>
+      <a class="button" [routerLink]="['/login']">Register for Airdrop</a>
+    </div>
+  </div>
+
+  <!-- Roadmap Section -->
+  <div class="section" id="roadmap">
+    <h2>Roadmap</h2>
+    <div class="roadmap">
+      <div class="roadmap-item">
+        <span class="phase-icon">🚀</span>
+        <p><strong>Phase 1:</strong> Airdrop Distribution</p>
+      </div>
+      <div class="roadmap-item">
+        <span class="phase-icon">🤖</span>
+        <p><strong>Phase 2:</strong> Smart Contract for Token Purchase</p>
+      </div>
+      <div class="roadmap-item">
+        <span class="phase-icon">📈</span>
+        <p><strong>Phase 3:</strong> Token Listing on DEX</p>
+      </div>
+      <div class="roadmap-item">
+        <span class="phase-icon">💻</span>
+        <p><strong>Phase 4:</strong> Development of Full Trading Platform</p>
+      </div>
+      <div class="roadmap-item">
+        <span class="phase-icon">🌍</span>
+        <p><strong>Phase 5:</strong> Expansion and Marketing</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Whitepaper Section -->
+  <div class="section" id="whitepaper">
+    <h2>White Paper</h2>
+    <div class="whitepaper">
+      <p>Learn more about our vision, technology, and goals.</p>
+      <a [routerLink]="['/white-paper']" target="_blank" class="button"
+        >View White Paper</a
+      >
+    </div>
+  </div>
+
+  <!-- Social Media Section -->
+  <div class="social-media" id="social-media">
+    <h2>Follow Us</h2>
+    <div class="social-links">
+      <a href="#" target="_blank" class="social-link"
+        ><img src="assets/images/x_twitter_icon.png" alt="X"
+      /></a>
+      <a href="#" target="_blank" class="social-link"
+        ><img src="assets/images/instagram_icon.png" alt="Instagram"
+      /></a>
+      <a href="#" target="_blank" class="social-link"
+        ><img src="assets/images/discord_icon.png" alt="Discord"
+      /></a>
+      <a href="#" target="_blank" class="social-link"
+        ><img src="assets/images/reddit_icon.png" alt="Reddit"
+      /></a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; {{ year }} Sentinel Trader Bot. All rights reserved.</p>
+  </footer>
+</div>
