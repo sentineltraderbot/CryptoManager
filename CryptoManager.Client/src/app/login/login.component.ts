@@ -16,7 +16,7 @@ declare var google: any;
 export class LoginComponent implements OnInit {
   errors: Errors = { errors: {} };
   returnUrl: string;
-  generalStatus: HealthStatusType;
+  generalStatus: HealthStatusType = null;
 
   constructor(
     private route: ActivatedRoute,

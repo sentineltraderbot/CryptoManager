@@ -1,16 +1,15 @@
 <div [@routerTransition] id="particles-js">
-  <div class="row mainlogin">
-    <div>
-      <a [routerLink]="['/health']">
-        <i
-          class="fa fa-fw fa-heartbeat"
-          [ngClass]="getColorByStatus(generalStatus)"
-        ></i>
-      </a>
-      <h1>Sentinel Trader</h1>
-      <app-list-errors [errors]="errors"></app-list-errors>
-      <form role="form">
-        <!-- facebook integration has been disabled, to reenabled we will need to pass the facebook screen
+  <div class="mainlogin">
+    <a [hidden]="!generalStatus" [routerLink]="['/health']">
+      <i
+        class="fa fa-fw fa-heartbeat"
+        [ngClass]="getColorByStatus(generalStatus)"
+      ></i>
+    </a>
+    <h2>Sentinel Trader Bot</h2>
+    <app-list-errors [errors]="errors"></app-list-errors>
+    <form role="form">
+      <!-- facebook integration has been disabled, to reenabled we will need to pass the facebook screen
          <a class="btn rounded-btn" (click)="onFacebookLogin()">
           {{ "Facebook Login" | translate }}
           <img
@@ -19,17 +18,16 @@
             class="facebook-logo"
         /></a> -->
 
-        <div
-          class="btn rounded-btn"
-          id="buttonDiv"
-          data-type="standard"
-          data-shape="pill"
-          data-theme="filled_black"
-          data-text="signin_with"
-          data-size="large"
-          data-logo_alignment="right"
-        ></div>
-      </form>
-    </div>
+      <div
+        class="btn rounded-btn"
+        id="buttonDiv"
+        data-type="standard"
+        data-shape="pill"
+        data-theme="filled_black"
+        data-text="signin_with"
+        data-size="large"
+        data-logo_alignment="right"
+      ></div>
+    </form>
   </div>
 </div>
