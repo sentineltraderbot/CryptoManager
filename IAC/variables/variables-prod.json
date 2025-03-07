@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logAnalyticsWorkspaceName": {
+      "value": "log-sentineltrader-prod"
+    },
+    "appInsightsName": {
+      "value": "appi-sentineltrader-prod"
+    },
+    "keyVaultName": {
+      "value": "kv-sentineltrader-prod"
+    },
+    "appServicePlanName": {
+      "value": "asp-sentinel-trader-prod"
+    },
+    "appServicePlanSku": {
+      "value": {
+        "name": "B1",
+        "tier": "Basic",
+        "size": "B1",
+        "family": "B",
+        "capacity": 1
+      }
+    },
+    "sqlServerName": {
+      "value": "sql-sentineltrader-prod-eun"
+    },
+    "databasesPlanSku": {
+      "value": {
+        "name": "GP_S_Gen5",
+        "tier": "GeneralPurpose",
+        "family": "Gen5",
+        "capacity": 2
+      }
+    },
+    "sqlServerCryptoManagerDBName": {
+      "value": "sqldb-cryptomanager-prod-eun"
+    },
+    "sqlServerRobotTraderDBName": {
+      "value": "sqldb-robottrader-prod-eun"
+    },
+    "sqlServerHistoryPricesDBName": {
+      "value": "sqldb-historyprices-prod-eun"
+    },
+    "cryptoManagerServerWebAppName": {
+      "value": "app-crypto-manager-server-prod-eun"
+    },
+    "cryptoManagerClientWebAppName": {
+      "value": "app-crypto-manager-client-prod-eun"
+    },
+    "robotTraderApiWebAppName": {
+      "value": "app-robot-trader-api-prod-eun"
+    }
+  }
+}

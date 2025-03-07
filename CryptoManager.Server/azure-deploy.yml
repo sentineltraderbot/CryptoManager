@@ -1,48 +1,47 @@
 ﻿parameters:
-    environment: ''
-    azureSubscription: ''
-    webAppName: ''
+  environment: ''
+  azureSubscription: ''
+  webAppName: ''
 
 jobs:
-
-    -   job: waitForValidation
-        displayName: Review to continue
-        pool: server
-        timeoutInMinutes: 120
-        steps:
-            -   task: ManualValidation@0
-                timeoutInMinutes: 60
-                inputs:
-                    instructions: 'Please validate the build configuration and reject'
-                    onTimeout: 'reject'
-
-    -   job: DeployTest
-        dependsOn: waitForValidation
-        displayName: 'Deploy Code'
+  - job: waitForValidation
+    displayName: Review to continue
+    pool: server
+    timeoutInMinutes: 120
+    steps:
+      - task: ManualValidation@0
         timeoutInMinutes: 60
-        cancelTimeoutInMinutes: 1
-        continueOnError: false
-        pool:
-            vmImage: windows-2019
+        inputs:
+          instructions: 'Please validate the build configuration and reject'
+          onTimeout: 'reject'
 
-        steps:
-            -   checkout: self
-                clean: true
+  - job: DeployTest
+    dependsOn: waitForValidation
+    displayName: 'Deploy Code'
+    timeoutInMinutes: 60
+    cancelTimeoutInMinutes: 1
+    continueOnError: false
+    pool:
+      vmImage: windows-2019
 
-            -   task: DownloadBuildArtifacts@0
-                inputs:
-                    buildType: 'current'
-                    artifactName: 'drop'
-                    itemPattern: 'drop/**'
-                    downloadPath: '$(build.artifactstagingdirectory)'
+    steps:
+      - checkout: self
+        clean: true
 
-            -   task: AzureRmWebAppDeployment@4
-                displayName: 'Azure App Service Deploy'
-                inputs:
-                    azureSubscription: ${{ parameters.azureSubscription }}
-                    appType: webAppLinux
-                    WebAppName: 'app-${{ parameters.webAppName }}-${{ parameters.environment }}'
-                    packageForLinux: '$(build.artifactstagingdirectory)/drop/CryptoManager.WebApi.zip'
-                    enableCustomDeployment: true
-                    ExcludeFilesFromAppDataFlag: false
-                    RenameFilesFlag: false
+      - task: DownloadBuildArtifacts@0
+        inputs:
+          buildType: 'current'
+          artifactName: 'drop'
+          itemPattern: 'drop/**'
+          downloadPath: '$(build.artifactstagingdirectory)'
+
+      - task: AzureRmWebAppDeployment@4
+        displayName: 'Azure App Service Deploy'
+        inputs:
+          azureSubscription: ${{ parameters.azureSubscription }}
+          appType: webAppLinux
+          WebAppName: 'app-${{ parameters.webAppName }}-${{ parameters.environment }}-eun'
+          packageForLinux: '$(build.artifactstagingdirectory)/drop/CryptoManager.WebApi.zip'
+          enableCustomDeployment: true
+          ExcludeFilesFromAppDataFlag: false
+          RenameFilesFlag: false

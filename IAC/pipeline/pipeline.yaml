@@ -1,0 +1,28 @@
+parameters:
+  - name: environment
+    displayName: 'Select Environment'
+    type: string
+    default: 'test'
+    values:
+      - test
+      - prod
+
+stages:
+  - stage: Deploy_Infrastructure
+    displayName: Deploy Infrastructure to ${{ parameters.environment }}
+    jobs:
+      - job: DeployBicep
+        displayName: Deploy Bicep to Azure
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'sentinel-trader-sc-${{ parameters.environment }}'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                az deployment group create \
+                  --resource-group rg-sentineltrader-${{ parameters.environment }} \
+                  --template-file iac/main.bicep \
+                  --parameters @iac/variables/variables-${{ parameters.environment }}.json

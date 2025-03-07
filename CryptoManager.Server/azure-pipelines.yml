@@ -2,8 +2,7 @@
   - master
 
 variables:
-  azureSubscription: 'all items'
-  webAppName: 'cryptomanager-server'
+  webAppName: 'crypto-manager-server'
 
 stages:
   - stage: Build
@@ -53,7 +52,7 @@ stages:
       - template: azure-deploy.yml
         parameters:
           environment: 'test'
-          azureSubscription: $(azureSubscription)
+          azureSubscription: 'sentinel-trader-sc-test'
           webAppName: $(webAppName)
 
   - stage: Prod_deployment
@@ -62,5 +61,5 @@ stages:
       - template: azure-deploy.yml
         parameters:
           environment: 'prod'
-          azureSubscription: $(azureSubscription)
+          azureSubscription: 'sentinel-trader-sc-prod'
           webAppName: $(webAppName)
