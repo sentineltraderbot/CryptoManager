@@ -1,0 +1,23 @@
+parameters:
+  - name: environment
+
+variables:
+  - group: ${{ parameters.environment }}
+  - name: DatabaseProvider
+    value: '$(CryptoManagerDatabaseProvider)'
+  - name: ConnectionStrings.DefaultConnection
+    value: '$(CryptoManagerDbConnectionStrings)'
+  - name: JwtKeyName
+    value: '$(jwt_key_name)'
+  - name: Authentication.Facebook.AppId
+    value: '$(facebook_app_id)'
+  - name: Authentication.Facebook.AppSecret
+    value: '$(facebook_app_secret)'
+  - name: Authentication.Google.AppId
+    value: '$(google_app_id)'
+  - name: Authentication.Google.AppSecret
+    value: '$(google_app_secret)'
+  - name: Authentication.SuperUserEmail
+    value: '$(super_user_email)'
+  - name: AzureKeyVault.Url
+    value: '$(keyvault_url)'

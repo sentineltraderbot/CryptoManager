@@ -3,7 +3,7 @@ export const environment = {
     baseUrl: "#{cryptomanager_server_base_url}#",
     roboTraderBaseUrl: "#{robotrader_base_url}#",
     version: "1.0.0",
-    solanaRpcUrl: "https://api.mainnet-beta.solana.com",
+    solanaRpcUrl: "#{solana_rpc_url}#",
   },
   login: {
     path: "login",

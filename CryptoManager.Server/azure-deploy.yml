@@ -35,6 +35,13 @@ jobs:
           itemPattern: 'drop/**'
           downloadPath: '$(build.artifactstagingdirectory)'
 
+      - task: FileTransform@1
+        displayName: 'File transformation: appsettings.json'
+        inputs:
+          folderPath: '$(Build.ArtifactStagingDirectory)/drop/CryptoManager.WebApi.zip'
+          targetFiles: '**/appsettings.json'
+          fileType: json
+
       - task: AzureRmWebAppDeployment@4
         displayName: 'Azure App Service Deploy'
         inputs:
