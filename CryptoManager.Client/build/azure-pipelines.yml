@@ -56,5 +56,5 @@ stages:
       - template: azure-deploy.yml
         parameters:
           environment: "prod"
-          azureSubscription: "sentinel-trader-sc-test"
+          azureSubscription: "sentinel-trader-sc-prod"
           webAppName: $(webAppName)
