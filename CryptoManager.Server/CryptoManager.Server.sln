@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{137CAD75
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.yml = azure-pipelines.yml
 		azure-deploy.yml = azure-deploy.yml
-		azure-variables.yaml = azure-variables.yaml
+		azure-variables.yml = azure-variables.yml
 	EndProjectSection
 EndProject
 Global
