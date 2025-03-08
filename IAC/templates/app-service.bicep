@@ -15,6 +15,9 @@ resource sites_app_name_resource 'Microsoft.Web/sites@2024-04-01' = {
   name: sites_app_name
   location: location
   kind: kind
+  identity: {
+    type: 'SystemAssigned'
+  }
   tags: {
     'hidden-link: /app-insights-resource-id': resourceId('Microsoft.Insights/components', appInsightsName)
   }
