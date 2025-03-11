@@ -28,6 +28,19 @@ stages:
               projects: '**/*Test/*.csproj'
               arguments: '--collect "Code coverage"'
 
+          - task: CopyFiles@2
+            displayName: 'Copy SQL Scripts to Artifact Staging Directory'
+            inputs:
+              SourceFolder: '$(System.DefaultWorkingDirectory)/CryptoManager.Repository/scripts'
+              Contents: '**/*.sql'
+              TargetFolder: '$(build.artifactstagingdirectory)'
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish SQL Scripts as Artifact'
+            inputs:
+              PathtoPublish: '$(build.artifactstagingdirectory)'
+              ArtifactName: 'sql-scripts'
+
           - task: DotNetCoreCLI@2
             displayName: Publish
             inputs:
@@ -51,6 +64,8 @@ stages:
           environment: 'test'
           azureSubscription: 'sentinel-trader-sc-test'
           webAppName: $(webAppName)
+          sqlServerName: 'sql-sentineltrader-test-eun'
+          databaseName: 'sqldb-cryptomanager-test-eun'
 
   - stage: Prod_deployment
     displayName: Prod deployment
@@ -64,3 +79,5 @@ stages:
           environment: 'prod'
           azureSubscription: 'sentinel-trader-sc-prod'
           webAppName: $(webAppName)
+          sqlServerName: 'sql-sentineltrader-prod-eun'
+          databaseName: 'sqldb-cryptomanager-prod-eun'

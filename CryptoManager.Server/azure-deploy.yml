@@ -2,6 +2,8 @@
   environment: ''
   azureSubscription: ''
   webAppName: ''
+  sqlServerName: ''
+  databaseName: ''
 
 jobs:
   - job: waitForValidation
@@ -34,6 +36,17 @@ jobs:
           artifactName: 'drop'
           itemPattern: 'drop/**'
           downloadPath: '$(build.artifactstagingdirectory)'
+
+      - task: PowerShell@2
+        displayName: 'Run SQL Scripts'
+        inputs:
+          targetType: 'inline'
+          script: |
+            $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop/sql-scripts" -Filter "*.sql" | Sort-Object Name
+            foreach ($file in $sqlFiles) {
+              Write-Host "Executing: $($file.FullName)"
+              Invoke-Sqlcmd -ServerInstance "$(sqlServerName)" -Database "$(databaseName)" -InputFile "$($file.FullName)"
+            }
 
       - task: FileTransform@1
         displayName: 'File transformation: appsettings.json'
