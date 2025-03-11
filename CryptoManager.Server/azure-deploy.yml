@@ -64,7 +64,7 @@ jobs:
             foreach ($file in $sqlFiles) {
                 Write-Host "Executing: $($file.FullName)"
 
-                sqlcmd -S $sqlServer -d $database -G -U "ManagedIdentity" -Q -i $file.FullName
+                sqlcmd -S $sqlServer -d $database -G -U "ManagedIdentity" -i $file.FullName
             }
 
       - task: FileTransform@1
