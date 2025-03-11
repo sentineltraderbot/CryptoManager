@@ -41,16 +41,16 @@ stages:
               PathtoPublish: '$(build.artifactstagingdirectory)'
               ArtifactName: 'sql-scripts'
 
-          # - task: DotNetCoreCLI@2
-          #   displayName: Publish
-          #   inputs:
-          #     command: publish
-          #     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+          - task: DotNetCoreCLI@2
+            displayName: Publish
+            inputs:
+              command: publish
+              arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
 
-          # - task: PublishBuildArtifacts@1
-          #   displayName: 'Publish Artifact: drop'
-          #   inputs:
-          #     PathtoPublish: '$(build.artifactstagingdirectory)'
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Artifact: drop'
+            inputs:
+              PathtoPublish: '$(build.artifactstagingdirectory)'
 
   - stage: Test_deployment
     displayName: Test deployment
