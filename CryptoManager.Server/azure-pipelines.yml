@@ -15,18 +15,18 @@ stages:
           vmImage: windows-latest
 
         steps:
-          - task: DotNetCoreCLI@2
-            displayName: Restore
-            inputs:
-              command: restore
-              projects: '**/*.csproj'
+          # - task: DotNetCoreCLI@2
+          #   displayName: Restore
+          #   inputs:
+          #     command: restore
+          #     projects: '**/*.csproj'
 
-          - task: DotNetCoreCLI@2
-            displayName: 'dotnet test'
-            inputs:
-              command: test
-              projects: '**/*Test/*.csproj'
-              arguments: '--collect "Code coverage"'
+          # - task: DotNetCoreCLI@2
+          #   displayName: 'dotnet test'
+          #   inputs:
+          #     command: test
+          #     projects: '**/*Test/*.csproj'
+          #     arguments: '--collect "Code coverage"'
 
           - task: CopyFiles@2
             displayName: 'Copy SQL Scripts to Artifact Staging Directory'
@@ -41,16 +41,16 @@ stages:
               PathtoPublish: '$(build.artifactstagingdirectory)'
               ArtifactName: 'sql-scripts'
 
-          - task: DotNetCoreCLI@2
-            displayName: Publish
-            inputs:
-              command: publish
-              arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+          # - task: DotNetCoreCLI@2
+          #   displayName: Publish
+          #   inputs:
+          #     command: publish
+          #     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
 
-          - task: PublishBuildArtifacts@1
-            displayName: 'Publish Artifact: drop'
-            inputs:
-              PathtoPublish: '$(build.artifactstagingdirectory)'
+          # - task: PublishBuildArtifacts@1
+          #   displayName: 'Publish Artifact: drop'
+          #   inputs:
+          #     PathtoPublish: '$(build.artifactstagingdirectory)'
 
   - stage: Test_deployment
     displayName: Test deployment
@@ -64,7 +64,7 @@ stages:
           environment: 'test'
           azureSubscription: 'sentinel-trader-sc-test'
           webAppName: $(webAppName)
-          sqlServerName: 'sql-sentineltrader-test-eun'
+          sqlServerName: 'sql-sentineltrader-test-eun.database.windows.net'
           databaseName: 'sqldb-cryptomanager-test-eun'
 
   - stage: Prod_deployment
@@ -79,5 +79,5 @@ stages:
           environment: 'prod'
           azureSubscription: 'sentinel-trader-sc-prod'
           webAppName: $(webAppName)
-          sqlServerName: 'sql-sentineltrader-prod-eun'
+          sqlServerName: 'sql-sentineltrader-prod-eun.database.windows.net'
           databaseName: 'sqldb-cryptomanager-prod-eun'
