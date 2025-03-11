@@ -42,7 +42,7 @@ jobs:
         inputs:
           targetType: 'inline'
           script: |
-            $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop/sql-scripts" -Filter "*.sql" | Sort-Object Name
+            $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name
             foreach ($file in $sqlFiles) {
               Write-Host "Executing: $($file.FullName)"
               Invoke-Sqlcmd -ServerInstance "$(sqlServerName)" -Database "$(databaseName)" -InputFile "$($file.FullName)"
