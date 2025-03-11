@@ -37,15 +37,34 @@ jobs:
           itemPattern: 'drop/**'
           downloadPath: '$(build.artifactstagingdirectory)'
 
-      - task: PowerShell@2
-        displayName: 'Run SQL Scripts'
+      # - task: PowerShell@2
+      #   displayName: 'Run SQL Scripts'
+      #   inputs:
+      #     targetType: 'inline'
+      #     script: |
+      #       $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name
+      #       foreach ($file in $sqlFiles) {
+      #         Write-Host "Executing: $($file.FullName)"
+      #         sqlcmd -S tcp:${{ parameters.sqlServerName }},1433 -d ${{ parameters.databaseName }} -G -i $file.FullName
+      #       }
+
+      - task: AzureCLI@2
+        displayName: 'Run SQL Scripts using MSI'
         inputs:
-          targetType: 'inline'
-          script: |
-            $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name
-            foreach ($file in $sqlFiles) {
-              Write-Host "Executing: $($file.FullName)"
-              sqlcmd -S tcp:${{ parameters.sqlServerName }},1433 -d ${{ parameters.databaseName }} -G -i $file.FullName
+          azureSubscription: ${{ parameters.azureSubscription }}
+          scriptType: 'pscore'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            $resourceURI = "https://database.windows.net/"
+            $accessToken = (az account get-access-token --resource=$resourceURI --query accessToken --output tsv)
+            $sqlServer = "${{ parameters.sqlServerName }}"
+            $database = "${{ parameters.databaseName }}"
+
+            Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name | ForEach-Object {
+                $scriptFile = $_.FullName
+                Write-Host "Executing: $scriptFile"
+
+                sqlcmd -S $sqlServer -d $database -G -U "ManagedIdentity" -Q "SET NOCOUNT ON; $(Get-Content -Raw $scriptFile)"
             }
 
       - task: FileTransform@1
