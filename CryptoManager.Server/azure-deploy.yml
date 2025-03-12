@@ -49,7 +49,7 @@ jobs:
             $sqlServer = "${{ parameters.sqlServerName }}"
             $database = "${{ parameters.databaseName }}"
 
-            $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name
+            $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop/sql-scripts" -Filter "*.sql" | Sort-Object Name
             foreach ($file in $sqlFiles) {
                 Write-Host "Executing: $($file.FullName)"
 
