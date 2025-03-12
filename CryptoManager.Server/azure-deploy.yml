@@ -79,7 +79,7 @@ jobs:
             foreach ($file in $sqlFiles) {
                 Write-Host "Executing: $($file.FullName)"
 
-                Invoke-SqlCmd -ServerInstance $sqlServer -Database $database -AccessToken $accessToken -InputFile $file.FullName
+                Invoke-SqlCmd -ServerInstance $sqlServer -Database $database -AccessToken $accessToken -InputFile "$($file.FullName)"
             }
 
       - task: FileTransform@1
