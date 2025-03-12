@@ -62,12 +62,12 @@ jobs:
 
             sqlcmd -S $sqlServer -d $database -G -U "ManagedIdentity" -Q "SELECT GETDATE();"
 
-            $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name
-            foreach ($file in $sqlFiles) {
-                Write-Host "Executing: $($file.FullName)"
+      # $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name
+      # foreach ($file in $sqlFiles) {
+      #     Write-Host "Executing: $($file.FullName)"
 
-                sqlcmd -S $sqlServer -d $database -G -U "ManagedIdentity" -i $file.FullName
-            }
+      #     sqlcmd -S $sqlServer -d $database -G -U "ManagedIdentity" -i $file.FullName
+      # }
 
       - task: FileTransform@1
         displayName: 'File transformation: appsettings.json'
