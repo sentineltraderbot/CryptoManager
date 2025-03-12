@@ -175,7 +175,7 @@ namespace CryptoManager.WebApi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "CryptoManager API V1");
             });
 
-            app.EnsureCreateDatabase();
+            //app.EnsureCreateDatabase();
             app.AddRole(WebUtil.ADMINISTRATOR_ROLE_NAME).Wait();
         }
     }
