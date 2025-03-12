@@ -58,10 +58,10 @@ jobs:
 
             $token = (Get-AzAccessToken -ResourceUrl https://database.windows.net).Token
 
-            Invoke-SqlCmd -ServerInstance "${{ parameters.sqlServerName }}" `
-                          -Database "${{ parameters.databaseName }}" `
-                          -AccessToken "$token" `
-                          -Query "SELECT GETDATE();"
+            $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name
+            foreach ($file in $sqlFiles) {
+              Invoke-SqlCmd -ServerInstance "${{ parameters.sqlServerName }}" -Database "${{ parameters.databaseName }}" -AccessToken "$token" -InputFile $file.FullName
+            }
 
       - task: AzureCLI@2
         displayName: 'Run SQL Scripts using MSI'
