@@ -15,31 +15,25 @@ stages:
           vmImage: windows-latest
 
         steps:
-          # - task: DotNetCoreCLI@2
-          #   displayName: Restore
-          #   inputs:
-          #     command: restore
-          #     projects: '**/*.csproj'
+          - task: DotNetCoreCLI@2
+            displayName: Restore
+            inputs:
+              command: restore
+              projects: '**/*.csproj'
 
-          # - task: DotNetCoreCLI@2
-          #   displayName: 'dotnet test'
-          #   inputs:
-          #     command: test
-          #     projects: '**/*Test/*.csproj'
-          #     arguments: '--collect "Code coverage"'
+          - task: DotNetCoreCLI@2
+            displayName: 'dotnet test'
+            inputs:
+              command: test
+              projects: '**/*Test/*.csproj'
+              arguments: '--collect "Code coverage"'
 
           - task: CopyFiles@2
             displayName: 'Copy SQL Scripts to Artifact Staging Directory'
             inputs:
               SourceFolder: '$(System.DefaultWorkingDirectory)/CryptoManager.Server/CryptoManager.Repository/scripts'
               Contents: '**/*.sql'
-              TargetFolder: '$(build.artifactstagingdirectory)'
-
-          - task: PublishBuildArtifacts@1
-            displayName: 'Publish SQL Scripts as Artifact'
-            inputs:
-              PathtoPublish: '$(build.artifactstagingdirectory)'
-              ArtifactName: 'sql-scripts'
+              TargetFolder: '$(build.artifactstagingdirectory)/sql-scripts'
 
           - task: DotNetCoreCLI@2
             displayName: Publish
