@@ -60,7 +60,9 @@ jobs:
             $sqlServer = "${{ parameters.sqlServerName }}"
             $database = "${{ parameters.databaseName }}"
 
-            Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name
+            sqlcmd -S $sqlServer -d $database -G -U "ManagedIdentity" -Q "SELECT GETDATE();"
+
+            $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name
             foreach ($file in $sqlFiles) {
                 Write-Host "Executing: $($file.FullName)"
 
