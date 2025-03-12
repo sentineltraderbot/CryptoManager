@@ -75,16 +75,12 @@ jobs:
             $sqlServer = "${{ parameters.sqlServerName }}"
             $database = "${{ parameters.databaseName }}"
 
-            Write-Host "before: $accessToken"
-            Invoke-SqlCmd -ServerInstance $sqlServer -Database $database -AccessToken $accessToken -Query "SELECT GETDATE();"
-            Write-Host "after enddddddddddddddddddddddddddddddddd"
-      # -InputFile $file.FullName
-      # $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name
-      # foreach ($file in $sqlFiles) {
-      #     Write-Host "Executing: $($file.FullName)"
+            $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name
+            foreach ($file in $sqlFiles) {
+                Write-Host "Executing: $($file.FullName)"
 
-      #     sqlcmd -S $sqlServer -d $database -G -U "ManagedIdentity" -i $file.FullName
-      # }
+                Invoke-SqlCmd -ServerInstance $sqlServer -Database $database -AccessToken $accessToken -InputFile $file.FullName
+            }
 
       - task: FileTransform@1
         displayName: 'File transformation: appsettings.json'
