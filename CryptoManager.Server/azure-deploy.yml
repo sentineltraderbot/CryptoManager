@@ -48,6 +48,21 @@ jobs:
       #         sqlcmd -S tcp:${{ parameters.sqlServerName }},1433 -d ${{ parameters.databaseName }} -G -i $file.FullName
       #       }
 
+      - task: AzurePowerShell@5
+        displayName: 'Run SQL Scripts'
+        inputs:
+          azureSubscription: ${{ parameters.azureSubscription }}
+          azurePowerShellVersion: 'LatestVersion'
+          scriptType: inlinescript
+          script: |
+
+            $token = (Get-AzAccessToken -ResourceUrl https://database.windows.net).Token
+
+            Invoke-SqlCmd -ServerInstance "${{ parameters.sqlServerName }}" `
+                          -Database "${{ parameters.databaseName }}" `
+                          -AccessToken "$token" `
+                          -Query "SELECT GETDATE();"
+
       - task: AzureCLI@2
         displayName: 'Run SQL Scripts using MSI'
         inputs:
@@ -60,7 +75,7 @@ jobs:
             $sqlServer = "${{ parameters.sqlServerName }}"
             $database = "${{ parameters.databaseName }}"
 
-            sqlcmd -S $sqlServer -d $database -G -U "" -P "" -Q "SELECT GETDATE();"
+            sqlcmd -S $sqlServer -d $database -Q "SELECT GETDATE();"
 
       # $sqlFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)/drop" -Filter "*.sql" | Sort-Object Name
       # foreach ($file in $sqlFiles) {
