@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
         const error = JSON.stringify(err);
         this.healthService.ping().subscribe({
           next: () => alert(error),
-          error: () => alert("API is Offline"),
+          error: () => console.log("API is Offline"),
         });
       },
     });
@@ -86,7 +86,7 @@ export class LoginComponent implements OnInit {
         const error = JSON.stringify(err);
         this.healthService.ping().subscribe({
           next: () => alert(error),
-          error: () => alert("API is Offline"),
+          error: () => console.log("API is Offline"),
         });
       },
     });

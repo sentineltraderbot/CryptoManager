@@ -11,18 +11,6 @@
     "keyVaultName": {
       "value": "kv-sentineltrader-prod"
     },
-    "appServicePlanName": {
-      "value": "asp-sentinel-trader-prod"
-    },
-    "appServicePlanSku": {
-      "value": {
-        "name": "B1",
-        "tier": "Basic",
-        "size": "B1",
-        "family": "B",
-        "capacity": 1
-      }
-    },
     "sqlServerName": {
       "value": "sql-sentineltrader-prod-eun"
     },
@@ -43,11 +31,47 @@
     "sqlServerHistoryPricesDBName": {
       "value": "sqldb-historyprices-prod-eun"
     },
+    "cryptoManagerServerAppServicePlanName": {
+      "value": "asp-crypto-manager-server-prod-eun"
+    },
+    "cryptoManagerServerAppServicePlanSku": {
+      "value": {
+        "name": "B1",
+        "tier": "Basic",
+        "size": "B1",
+        "family": "B",
+        "capacity": 1
+      }
+    },
     "cryptoManagerServerWebAppName": {
       "value": "app-crypto-manager-server-prod-eun"
     },
+    "cryptoManagerClientAppServicePlanName": {
+      "value": "asp-crypto-manager-client-prod-eun"
+    },
+    "cryptoManagerClientAppServicePlanSku": {
+      "value": {
+        "name": "B1",
+        "tier": "Basic",
+        "size": "B1",
+        "family": "B",
+        "capacity": 1
+      }
+    },
     "cryptoManagerClientWebAppName": {
       "value": "app-crypto-manager-client-prod-eun"
+    },
+    "robotTraderApiAppServicePlanName": {
+      "value": "asp-robot-trader-api-prod-eun"
+    },
+    "robotTraderApiAppServicePlanSku": {
+      "value": {
+        "name": "F1",
+        "tier": "Free",
+        "size": "F1",
+        "family": "F",
+        "capacity": 1
+      }
     },
     "robotTraderApiWebAppName": {
       "value": "app-robot-trader-api-prod-eun"

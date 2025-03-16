@@ -84,7 +84,7 @@ public class AccountService : IAccountService
 
     private async Task<IdentityResult> AddSuperUserInRoleAdmin(ApplicationUser user)
     {
-        if (user.Email.Equals(_configuration["SuperUserEmail"]))
+        if (user.Email.Equals(_configuration["Authentication:SuperUserEmail"]))
         {
             if (!await _userManager.IsInRoleAsync(user, ADMINISTRATOR_ROLE_NAME))
             {

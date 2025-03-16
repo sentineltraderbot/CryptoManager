@@ -466,7 +466,7 @@ BEGIN
     INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
     WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Exchange]') AND [c].[name] = N'ExchangeType')
     IF @var23 IS NOT NULL EXEC(N'ALTER TABLE [Exchange] DROP CONSTRAINT [' + @var23 + ']')
-    ALTER TABLE [Exchange] ALTER COLUMN [ExchangeType] bit NOT NULL
+    ALTER TABLE [Exchange] ALTER COLUMN [ExchangeType] int NOT NULL
     
 
     DECLARE @var24 sysname

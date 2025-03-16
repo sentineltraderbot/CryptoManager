@@ -7,12 +7,6 @@ param appInsightsName string
 @description('Key Vault Name')
 param keyVaultName string
 
-@description('App Service Plan Name')
-param appServicePlanName string
-
-@description('App Service Plan Sku')
-param appServicePlanSku object
-
 @description('Sql Server Name')
 param sqlServerName string
 
@@ -28,11 +22,29 @@ param sqlServerRobotTraderDBName string
 @description('Sql Server History Prices DB Name')
 param sqlServerHistoryPricesDBName string
 
+@description('Crypto Manager Server App Service Plan Name')
+param cryptoManagerServerAppServicePlanName string
+
+@description('Crypto Manager Server App Service Plan Sku')
+param cryptoManagerServerAppServicePlanSku object
+
 @description('Crypto Manager Server Web App Name')
 param cryptoManagerServerWebAppName string
 
+@description('Crypto Manager Client App Service Plan Name')
+param cryptoManagerClientAppServicePlanName string
+
+@description('Crypto Manager Client App Service Plan Sku')
+param cryptoManagerClientAppServicePlanSku object
+
 @description('Crypto Manager Client Web App Name')
 param cryptoManagerClientWebAppName string
+
+@description('Robot Trader API App Service Plan Name')
+param robotTraderApiAppServicePlanName string
+
+@description('Robot Trader API App Service Plan Sku')
+param robotTraderApiAppServicePlanSku object
 
 @description('Robot Trader API Web App Name')
 param robotTraderApiWebAppName string
@@ -117,29 +129,19 @@ module sqlServerHistoryPricesDB 'templates/sql-server-database.bicep' = {
   dependsOn: [sqlServer]
 }
 
-@description('Deploy App Service Plan')
-module appServicePlan 'templates/app-service-plan.bicep' = {
-  name: 'AppServicePlanDeployment'
-  params: {
-    location: resourceGroup().location
-    serverfarms_asp_name: appServicePlanName
-    sku: appServicePlanSku
-    kind: 'linux'
-  }
-}
-
 @description('Deploy Crypto Manager API App Service')
 module appServiceCryptoManagerServer 'templates/app-service.bicep' = {
   name: 'CryptoManagerServerAppServiceDeployment'
   params: {
     location: resourceGroup().location
     sites_app_name: cryptoManagerServerWebAppName
-    appServicePlanName: appServicePlanName
+    appServicePlanName: cryptoManagerServerAppServicePlanName
+    appServicePlanSku: cryptoManagerServerAppServicePlanSku
     kind: 'app,linux'
     runtime_stack: 'DOTNETCORE|8.0'
     appInsightsName: appInsightsName
   }
-  dependsOn:[appServicePlan, appInsights]
+  dependsOn:[appInsights]
 }
 
 @description('Deploy Crypto Manager Client App Service')
@@ -148,13 +150,14 @@ module appServiceCryptoManagerClient 'templates/app-service.bicep' = {
   params: {
     location: resourceGroup().location
     sites_app_name: cryptoManagerClientWebAppName
-    appServicePlanName: appServicePlanName
+    appServicePlanName: cryptoManagerClientAppServicePlanName
+    appServicePlanSku: cryptoManagerClientAppServicePlanSku
     kind: 'app,linux'
     runtime_stack: 'NODE|20-lts'
     appCommandLine: 'pm2 serve /home/site/wwwroot/public --no-daemon --spa'
     appInsightsName: appInsightsName
   }
-  dependsOn:[appServicePlan, appInsights]
+  dependsOn:[appInsights]
 }
 
 @description('Deploy Robot Trader API App Service')
@@ -163,10 +166,11 @@ module appServiceRobotTraderAPI 'templates/app-service.bicep' = {
   params: {
     location: resourceGroup().location
     sites_app_name: robotTraderApiWebAppName
-    appServicePlanName: appServicePlanName
+    appServicePlanName: robotTraderApiAppServicePlanName
+    appServicePlanSku: robotTraderApiAppServicePlanSku
     kind: 'app,linux'
     runtime_stack: 'DOTNETCORE|8.0'
     appInsightsName: appInsightsName
   }
-  dependsOn:[appServicePlan, appInsights]
+  dependsOn:[appInsights]
 }

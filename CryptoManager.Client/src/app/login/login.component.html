@@ -1,11 +1,12 @@
 <div [@routerTransition] id="particles-js">
+  <a [hidden]="!generalStatus" [routerLink]="['/health']">
+    <i
+      class="fa fa-fw fa-heartbeat"
+      [ngClass]="getColorByStatus(generalStatus)"
+    ></i>
+  </a>
   <div class="mainlogin">
-    <a [hidden]="!generalStatus" [routerLink]="['/health']">
-      <i
-        class="fa fa-fw fa-heartbeat"
-        [ngClass]="getColorByStatus(generalStatus)"
-      ></i>
-    </a>
+    <img src="assets/images/favicon_high_res.png" width="20px" />
     <h2>Sentinel Trader Bot</h2>
     <app-list-errors [errors]="errors"></app-list-errors>
     <form role="form">

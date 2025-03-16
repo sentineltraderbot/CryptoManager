@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
-  Renderer2,
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
@@ -16,6 +15,7 @@ import { SolanaWalletService } from "./shared/services/solana-wallet-service";
 })
 export class AppComponent implements OnInit, AfterContentInit {
   showLoader: boolean = false;
+  lastPingTime = 0;
   constructor(
     private accountService: AccountService,
     private healthService: HealthService,
@@ -58,14 +58,18 @@ export class AppComponent implements OnInit, AfterContentInit {
   }
 
   ping() {
-    this.healthService.ping().subscribe({
-      next: () => {
-        this.accountService.populate();
-      },
-      error: () => {
-        alert("API is Offline");
-        this.accountService.purgeAuth();
-      },
-    });
+    const now = Date.now();
+    if (now - this.lastPingTime > 1000) {
+      this.lastPingTime = now;
+      this.healthService.ping().subscribe({
+        next: () => {
+          this.accountService.populate();
+        },
+        error: () => {
+          console.log("API is Offline");
+          this.accountService.purgeAuth();
+        },
+      });
+    }
   }
 }

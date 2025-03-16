@@ -1,17 +1,24 @@
 param sites_app_name string
 param appServicePlanName string
+param appServicePlanSku object
 param appInsightsName string
 param location string
 param kind string
 param runtime_stack string
 param appCommandLine string = ''
 
-resource serverfarms_asp_name_resource 'Microsoft.Web/serverfarms@2024-04-01' = {
-  location: location
-  name: appServicePlanName
+module serverfarms_asp_name_resource 'app-service-plan.bicep' = {
+  name: 'AppServicePlanDeployment${appServicePlanName}'
+  params: {
+    location: location
+    serverfarms_asp_name: appServicePlanName
+    sku: appServicePlanSku
+    kind: 'linux'
+  }
 }
 
 resource sites_app_name_resource 'Microsoft.Web/sites@2024-04-01' = {
+  dependsOn:[serverfarms_asp_name_resource]
   name: sites_app_name
   location: location
   kind: kind
@@ -35,7 +42,7 @@ resource sites_app_name_resource 'Microsoft.Web/sites@2024-04-01' = {
         hostType: 'Repository'
       }
     ]
-    serverFarmId: serverfarms_asp_name_resource.id
+    serverFarmId: resourceId('Microsoft.Web/serverfarms', appServicePlanName)
     reserved: true
     isXenon: false
     hyperV: false
