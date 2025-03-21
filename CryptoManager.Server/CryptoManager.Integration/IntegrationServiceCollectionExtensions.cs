@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using CryptoManager.Domain.Contracts.Integration;
+using CryptoManager.Domain.Contracts.Integration.Utils;
 using CryptoManager.Domain.Contracts.Repositories;
+using CryptoManager.Domain.Entities;
 using CryptoManager.Domain.IntegrationEntities.Exchanges;
 using CryptoManager.Integration.BlockchainIntegrationStrategies;
 using CryptoManager.Integration.Clients;
@@ -39,68 +43,41 @@ namespace CryptoManager.Integration
 
             //clients
             services.AddRefitClient<IBinanceIntegrationClient>()
-                .ConfigureHttpClient(async (sp, c) =>
-                {
-                    var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
-                    using var serviceScope = serviceScopeFactory.CreateScope();
-                    var exchangeRepository = serviceScope.ServiceProvider.GetService<IExchangeRepository>();
-                    var exchange = await exchangeRepository.GetByExchangeTypeAsync(ExchangesIntegratedType.Binance);
-                    if (exchange != null)
-                    {
-                        c.BaseAddress = new Uri(exchange.APIUrl);
-                    }
-                });
+                .ConfigureHttpClient(async (sp, c) => await AddHttpClient(sp, c, ExchangesIntegratedType.Binance));
+
             services.AddRefitClient<IBitcoinTradeIntegrationClient>()
-                .ConfigureHttpClient(async (sp, c) =>
-                {
-                    var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
-                    using var serviceScope = serviceScopeFactory.CreateScope();
-                    var exchangeRepository = serviceScope.ServiceProvider.GetService<IExchangeRepository>();
-                    var exchange = await exchangeRepository.GetByExchangeTypeAsync(ExchangesIntegratedType.BitcoinTrade);
-                    if (exchange != null)
-                    {
-                        c.BaseAddress = new Uri(exchange.APIUrl);
-                    }
-                });
+                .ConfigureHttpClient(async (sp, c) => await AddHttpClient(sp, c, ExchangesIntegratedType.BitcoinTrade));
+
             services.AddRefitClient<ICoinbaseIntegrationClient>()
-                .ConfigureHttpClient(async (sp, c) =>
-                {
-                    var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
-                    using var serviceScope = serviceScopeFactory.CreateScope();
-                    var exchangeRepository = serviceScope.ServiceProvider.GetService<IExchangeRepository>();
-                    var exchange = await exchangeRepository.GetByExchangeTypeAsync(ExchangesIntegratedType.Coinbase);
-                    if (exchange != null)
-                    {
-                        c.BaseAddress = new Uri(exchange.APIUrl);
-                    }
-                });
+                .ConfigureHttpClient(async (sp, c) => await AddHttpClient(sp, c, ExchangesIntegratedType.Coinbase));
+
             services.AddRefitClient<IHitBTCIntegrationClient>()
-                .ConfigureHttpClient(async (sp, c) =>
-                {
-                    var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
-                    using var serviceScope = serviceScopeFactory.CreateScope();
-                    var exchangeRepository = serviceScope.ServiceProvider.GetService<IExchangeRepository>();
-                    var exchange = await exchangeRepository.GetByExchangeTypeAsync(ExchangesIntegratedType.HitBTC);
-                    if (exchange != null)
-                    {
-                        c.BaseAddress = new Uri(exchange.APIUrl);
-                    }
-                });
+                .ConfigureHttpClient(async (sp, c) => await AddHttpClient(sp, c, ExchangesIntegratedType.HitBTC));
 
             services.AddRefitClient<IKuCoinIntegrationClient>()
-                .ConfigureHttpClient(async (sp, c) =>
-                {
-                    var serviceScopeFactory = sp.GetRequiredService<IServiceScopeFactory>();
-                    using var serviceScope = serviceScopeFactory.CreateScope();
-                    var exchangeRepository = serviceScope.ServiceProvider.GetService<IExchangeRepository>();
-                    var exchange = await exchangeRepository.GetByExchangeTypeAsync(ExchangesIntegratedType.KuCoin);
-                    if (exchange != null)
-                    {
-                        c.BaseAddress = new Uri(exchange.APIUrl);
-                    }
-                });
+                .ConfigureHttpClient(async (sp, c) => await AddHttpClient(sp, c, ExchangesIntegratedType.KuCoin));
 
             return services;
+        }
+
+        private async static Task AddHttpClient(IServiceProvider serviceProvider, HttpClient httpClient, ExchangesIntegratedType exchangeType)
+        {
+            var serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
+            using var serviceScope = serviceScopeFactory.CreateScope();
+            var cache = serviceScope.ServiceProvider.GetService<IExchangeIntegrationCache>();
+            
+            var exchange = await cache.GetAsync<Exchange>(exchangeType, ExchangeCacheEntityType.ExchangeEntity);
+            if(exchange == null)
+            {
+                var exchangeRepository = serviceScope.ServiceProvider.GetService<IExchangeRepository>();
+                exchange = await exchangeRepository.GetByExchangeTypeAsync(exchangeType);
+                await cache.AddExchangeEntityAsync(exchange, exchangeType);
+            }
+
+            if (exchange != null)
+            {
+                httpClient.BaseAddress = new Uri(exchange.APIUrl);
+            }
         }
     }
 }

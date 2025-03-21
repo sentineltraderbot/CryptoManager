@@ -409,7 +409,7 @@ BEGIN
     ALTER TABLE [Order] ADD [IsViaRoboTrader] bit NOT NULL DEFAULT 0
     
 
-    ALTER TABLE [Order] ADD [OrderType] bit NOT NULL DEFAULT 0
+    ALTER TABLE [Order] ADD [OrderType] int NOT NULL DEFAULT 0
     
 
     ALTER TABLE [Order] ADD [RelatedOrderId] uniqueidentifier NULL

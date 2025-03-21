@@ -10,21 +10,32 @@
   </button>
 </div>
 <div class="modal-body">
+  <div *ngIf="isChrome()">
+    <p>
+      Please install the Chrome wallet extension before requesting the airdrop.
+    </p>
+  </div>
   <div>
-    <select [ngModel]="walletName" (ngModelChange)="onSelectWallet($event)">
-      <option [ngValue]="null">Not selected</option>
-      <option *ngFor="let wallet of wallets" [ngValue]="wallet.adapter.name">
-        {{ wallet.adapter.name }} ({{ wallet.readyState }})
-      </option>
-    </select>
+    <fieldset class="form-group">
+      <label>{{ "Wallet" | translate }}</label>
+      <ng-select
+        [items]="wallets"
+        (ngModelChange)="onSelectWallet($event)"
+        bindLabel="adapter.name"
+        bindValue="adapter.name"
+        [(ngModel)]="walletName"
+        #walletConnected="ngModel"
+        appendTo="body"
+        name="walletConnected"
+        required
+      >
+      </ng-select>
+    </fieldset>
   </div>
   <button
     type="button"
     class="btn"
-    [disabled]="
-      solanaWalletService.isSolanaWalletConnected() ||
-      !this.solanaWalletService.getWallet()
-    "
+    [disabled]="solanaWalletService.isSolanaWalletConnected() || !walletName"
     (click)="onConnect()"
   >
     Connect
@@ -37,6 +48,18 @@
   >
     Disconnect
   </button>
+
+  <div *ngIf="!isChrome()">
+    <p>
+      Airdrop requests are not supported on this browser. Please use Google
+      Chrome on a desktop.
+    </p>
+  </div>
+  <div *ngIf="errorMessage">
+    <p>
+      {{ errorMessage }}
+    </p>
+  </div>
 </div>
 <div class="modal-footer">
   <button

@@ -72,7 +72,7 @@ namespace CryptoManager.WebApi
 
             services.AddControllers(options =>
             {
-                options.Filters.Add(new AuthorizeFilter("Bearer"));
+                options.Filters.Add(new AuthorizeFilter(JwtBearerDefaults.AuthenticationScheme));
             });
 
             services.AddAuthentication(options =>

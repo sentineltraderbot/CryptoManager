@@ -12,6 +12,7 @@ import { AlertModule, SharedPipesModule } from "../shared";
 import { FormsModule } from "@angular/forms";
 import { SolanaWalletConnectorModalComponent } from "./solana-wallet-connector-modal/solana-wallet-connector-modal.component";
 import { TokenBalanceComponent } from "./components/token-balance/token-balance.component";
+import { NgSelectModule } from "@ng-select/ng-select";
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { TokenBalanceComponent } from "./components/token-balance/token-balance.
     AlertModule,
     SharedPipesModule,
     FormsModule,
+    NgSelectModule,
   ],
   declarations: [
     LayoutComponent,

@@ -1,10 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
-import { WalletName, WalletReadyState } from "@solana/wallet-adapter-base";
-import { Observable } from "rxjs";
+import { WalletName } from "@solana/wallet-adapter-base";
 import { SolanaWalletService } from "../../shared/services/solana-wallet-service";
 import { Wallet } from "@heavy-duty/wallet-adapter";
-import { AlertHandlerService, AlertType } from "../../shared";
 @Component({
   templateUrl: "./solana-wallet-connector-modal.component.html",
   styleUrl: "./solana-wallet-connector-modal.component.scss",
@@ -12,27 +10,44 @@ import { AlertHandlerService, AlertType } from "../../shared";
 export class SolanaWalletConnectorModalComponent implements OnInit {
   wallets: Wallet[] = null;
   walletName: WalletName<string> | "None" = null;
+  errorMessage: string = null;
+
   constructor(
     public activeModal: NgbActiveModal,
     public readonly solanaWalletService: SolanaWalletService
   ) {}
 
   ngOnInit() {
-    this.wallets = this.solanaWalletService.getWallets();
-    this.walletName = this.solanaWalletService.getWalletName();
+    if (this.isChrome()) {
+      this.wallets = this.solanaWalletService.getWallets();
+      this.walletName = this.solanaWalletService.getWalletName();
+    }
   }
 
   onConnect() {
     this.solanaWalletService.connect().subscribe({
-      next: () => console.log("Wallet connected"),
-      error: (error) => console.error(error),
+      next: () => {
+        console.log("Wallet connected");
+        this.errorMessage = null;
+      },
+      error: (error) => {
+        this.errorMessage = error;
+        console.error(error);
+      },
     });
   }
 
   onDisconnect() {
     this.solanaWalletService.disconnect().subscribe({
-      next: () => console.log("Wallet disconnected"),
-      error: (error) => console.error(error),
+      next: () => {
+        console.log("Wallet disconnected");
+        this.walletName = null;
+        this.errorMessage = null;
+      },
+      error: (error) => {
+        this.errorMessage = error;
+        console.error(error);
+      },
     });
   }
 
@@ -44,5 +59,14 @@ export class SolanaWalletConnectorModalComponent implements OnInit {
     this.activeModal.close(
       this.solanaWalletService.getWallet().adapter.publicKey.toBase58()
     );
+  }
+
+  isChrome(): boolean {
+    const userAgent = navigator.userAgent;
+    return /Chrome/.test(userAgent) && !/Edg|OPR/.test(userAgent);
+  }
+
+  isMobile(): boolean {
+    return /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
   }
 }

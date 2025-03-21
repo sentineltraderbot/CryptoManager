@@ -1,4 +1,5 @@
 ﻿using CryptoManager.Domain.Contracts.Integration;
+using CryptoManager.Domain.Contracts.Integration.Utils;
 using CryptoManager.Domain.DTOs;
 using CryptoManager.Domain.IntegrationEntities.Exchanges;
 using CryptoManager.Domain.IntegrationEntities.Exchanges.Coinbase;
@@ -25,7 +26,7 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
         public async Task<ObjectResult<TickerPriceDTO>> GetCurrentPriceAsync(string baseAssetSymbol, string quoteAssetSymbol)
         {
             var symbol = $"{baseAssetSymbol}-{quoteAssetSymbol}";
-            var price = await _cache.GetAsync<TickerPrice>(ExchangesIntegratedType.Coinbase, symbol);
+            var price = await _cache.GetAsync<TickerPrice>(ExchangesIntegratedType.Coinbase, ExchangeCacheEntityType.SymbolPrice, symbol);
             if (price == null)
             {
                 price = await _coinbaseIntegrationClient.GetTickerPriceAsync(symbol);
@@ -33,7 +34,7 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
                 {
                     return ObjectResult<TickerPriceDTO>.Error($"symbol {symbol} does not exist in Coinbase");
                 }
-                await _cache.AddAsync(price, ExchangesIntegratedType.Coinbase, symbol);
+                await _cache.AddAsync(price, ExchangesIntegratedType.Coinbase, ExchangeCacheEntityType.SymbolPrice, symbol);
             }
             return ObjectResult<TickerPriceDTO>.Success(
                 new TickerPriceDTO

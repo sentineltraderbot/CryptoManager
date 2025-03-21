@@ -1,4 +1,5 @@
-﻿using CryptoManager.Domain.IntegrationEntities.Exchanges;
+﻿using CryptoManager.Domain.Contracts.Integration.Utils;
+using CryptoManager.Domain.IntegrationEntities.Exchanges;
 using CryptoManager.Domain.IntegrationEntities.Exchanges.HitBTC;
 using CryptoManager.Integration.Clients;
 using CryptoManager.Integration.ExchangeIntegrationStrategies;
@@ -21,10 +22,10 @@ namespace CryptoManager.Integration.Test
             TickerPrice ticker = null;
             var symbol = "LTCBTC";
             var cacheMock = new Mock<IExchangeIntegrationCache>(MockBehavior.Strict);
-            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.HitBTC, symbol))
+            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.HitBTC, ExchangeCacheEntityType.SymbolPrice, symbol))
                 .ReturnsAsync(ticker);
 
-            cacheMock.Setup(repo => repo.AddAsync(It.IsAny<IEnumerable<TickerPrice>>(), ExchangesIntegratedType.HitBTC, It.IsAny<Func<TickerPrice, string>>()))
+            cacheMock.Setup(repo => repo.AddAsync(It.IsAny<IEnumerable<TickerPrice>>(), ExchangesIntegratedType.HitBTC, ExchangeCacheEntityType.SymbolPrice, It.IsAny<Func<TickerPrice, string>>()))
                 .Returns(Task.CompletedTask);
 
             var clientMock = new Mock<IHitBTCIntegrationClient>(MockBehavior.Strict);
@@ -43,11 +44,12 @@ namespace CryptoManager.Integration.Test
             TickerPrice ticker = null;
             var symbol = "nuncaterajsdhjkdhsajkdh";
             var cacheMock = new Mock<IExchangeIntegrationCache>(MockBehavior.Strict);
-            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.HitBTC, symbol))
+            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.HitBTC, ExchangeCacheEntityType.SymbolPrice, symbol))
                 .ReturnsAsync(ticker);
 
             cacheMock.Setup(repo => repo.AddAsync(It.IsAny<IEnumerable<TickerPrice>>(),
                                                   ExchangesIntegratedType.HitBTC,
+                                                  ExchangeCacheEntityType.SymbolPrice,
                                                   It.IsAny<Func<TickerPrice, string>>()))
                 .Returns(Task.CompletedTask);
 

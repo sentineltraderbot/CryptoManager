@@ -1,4 +1,5 @@
-﻿using CryptoManager.Domain.IntegrationEntities.Exchanges;
+﻿using CryptoManager.Domain.Contracts.Integration.Utils;
+using CryptoManager.Domain.IntegrationEntities.Exchanges;
 using CryptoManager.Domain.IntegrationEntities.Exchanges.KuCoin;
 using CryptoManager.Integration.Clients;
 using CryptoManager.Integration.ExchangeIntegrationStrategies;
@@ -19,11 +20,12 @@ namespace CryptoManager.Integration.Test
             TickerPrice ticker = null;
             var symbol = "BTC-USDT";
             var cacheMock = new Mock<IExchangeIntegrationCache>(MockBehavior.Strict);
-            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.KuCoin, symbol))
+            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.KuCoin, ExchangeCacheEntityType.SymbolPrice, symbol))
                 .ReturnsAsync(ticker);
 
             cacheMock.Setup(repo => repo.AddAsync(It.IsAny<IEnumerable<TickerPrice>>(), 
                                                   ExchangesIntegratedType.KuCoin, 
+                                                  ExchangeCacheEntityType.SymbolPrice,
                                                   It.IsAny<Func<TickerPrice, string>>()))
                 .Returns(Task.CompletedTask);
 
@@ -42,11 +44,12 @@ namespace CryptoManager.Integration.Test
             TickerPrice ticker = null;
             var symbol = "nuncatera-jsdhjkdhsajkdh";
             var cacheMock = new Mock<IExchangeIntegrationCache>(MockBehavior.Strict);
-            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.KuCoin, symbol))
+            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.KuCoin, ExchangeCacheEntityType.SymbolPrice, symbol))
                 .ReturnsAsync(ticker);
 
             cacheMock.Setup(repo => repo.AddAsync(It.IsAny<IEnumerable<TickerPrice>>(), 
-                                                  ExchangesIntegratedType.KuCoin, 
+                                                  ExchangesIntegratedType.KuCoin,
+                                                  ExchangeCacheEntityType.SymbolPrice,
                                                   It.IsAny<Func<TickerPrice, string>>()))
                 .Returns(Task.CompletedTask);
 

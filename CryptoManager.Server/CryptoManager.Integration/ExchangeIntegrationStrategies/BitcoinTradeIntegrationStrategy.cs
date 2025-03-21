@@ -1,4 +1,5 @@
 ﻿using CryptoManager.Domain.Contracts.Integration;
+using CryptoManager.Domain.Contracts.Integration.Utils;
 using CryptoManager.Domain.DTOs;
 using CryptoManager.Domain.IntegrationEntities.Exchanges;
 using CryptoManager.Domain.IntegrationEntities.Exchanges.BitcoinTrade;
@@ -31,7 +32,7 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
         public async Task<ObjectResult<TickerPriceDTO>> GetCurrentPriceAsync(string baseAssetSymbol, string quoteAssetSymbol)
         {
             var symbol = $"{baseAssetSymbol}_{quoteAssetSymbol}";
-            var price = await _cache.GetAsync<TickerPrice>(ExchangesIntegratedType.BitcoinTrade, symbol);
+            var price = await _cache.GetAsync<TickerPrice>(ExchangesIntegratedType.BitcoinTrade, ExchangeCacheEntityType.SymbolPrice, symbol);
             if (price == null)
             {
                 var response = await Policy
@@ -45,7 +46,7 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
                 }
 
                 price = response.Data.FirstOrDefault(a => a.Pair.Equals(symbol));
-                await _cache.AddAsync(response.Data, ExchangesIntegratedType.BitcoinTrade, a => a.Pair);
+                await _cache.AddAsync(response.Data, ExchangesIntegratedType.BitcoinTrade, ExchangeCacheEntityType.SymbolPrice, a => a.Pair);
                 if(price == null)
                 {
                     return ObjectResult<TickerPriceDTO>.Error($"symbol {symbol} does not exist in Bitcointrade");
@@ -79,14 +80,18 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
 
         public async Task<IEnumerable<TickerPriceDTO>> GetTickersAsync()
         {
-            var response = await Policy
-                    .Handle<ApiException>(ex => ex.StatusCode == HttpStatusCode.TooManyRequests)
-                    .RetryAsync(_numberOfRetries)
-                    .ExecuteAsync(_bitcoinTradeIntegrationClient.GetTickersAsync);
-                    
-            await _cache.AddAsync(response.Data, ExchangesIntegratedType.BitcoinTrade, a => a.Pair);
-            
-            return response.Data.Select(a => new TickerPriceDTO
+            var tickers = await _cache.GetAsync<IEnumerable<TickerPrice>>(ExchangesIntegratedType.BitcoinTrade, ExchangeCacheEntityType.SymbolPriceList);
+            if (tickers == null)
+            {
+                var response = await Policy
+                        .Handle<ApiException>(ex => ex.StatusCode == HttpStatusCode.TooManyRequests)
+                        .RetryAsync(_numberOfRetries)
+                        .ExecuteAsync(_bitcoinTradeIntegrationClient.GetTickersAsync);
+                        
+                tickers = response.Data;
+                await _cache.AddAsync(tickers, ExchangesIntegratedType.BitcoinTrade, ExchangeCacheEntityType.SymbolPriceList);
+            }
+            return tickers.Select(a => new TickerPriceDTO
             {
                 Symbol = a.Pair.Replace("_", string.Empty),
                 Price = a.Ask

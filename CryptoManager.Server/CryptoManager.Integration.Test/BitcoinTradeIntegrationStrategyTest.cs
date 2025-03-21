@@ -1,4 +1,5 @@
-﻿using CryptoManager.Domain.IntegrationEntities.Exchanges;
+﻿using CryptoManager.Domain.Contracts.Integration.Utils;
+using CryptoManager.Domain.IntegrationEntities.Exchanges;
 using CryptoManager.Domain.IntegrationEntities.Exchanges.BitcoinTrade;
 using CryptoManager.Integration.Clients;
 using CryptoManager.Integration.ExchangeIntegrationStrategies;
@@ -21,11 +22,12 @@ namespace CryptoManager.Integration.Test
             TickerPrice ticker = null;
             var symbol = "BTC_BRL";
             var cacheMock = new Mock<IExchangeIntegrationCache>(MockBehavior.Strict);
-            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.BitcoinTrade, symbol))
+            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.BitcoinTrade, ExchangeCacheEntityType.SymbolPrice, symbol))
                 .ReturnsAsync(ticker);
 
             cacheMock.Setup(repo => repo.AddAsync(It.IsAny<IEnumerable<TickerPrice>>(), 
-                                                  ExchangesIntegratedType.BitcoinTrade, 
+                                                  ExchangesIntegratedType.BitcoinTrade,
+                                                  ExchangeCacheEntityType.SymbolPrice,
                                                   It.IsAny<Func<TickerPrice, string>>()))
                 .Returns(Task.CompletedTask);
 
@@ -45,11 +47,12 @@ namespace CryptoManager.Integration.Test
             TickerPrice ticker = null;
             var symbol = "nuncatera_jsdhjkdhsajkdh";
             var cacheMock = new Mock<IExchangeIntegrationCache>(MockBehavior.Strict);
-            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.BitcoinTrade, symbol))
+            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.BitcoinTrade, ExchangeCacheEntityType.SymbolPrice, symbol))
                 .ReturnsAsync(ticker);
 
             cacheMock.Setup(repo => repo.AddAsync(It.IsAny<IEnumerable<TickerPrice>>(), 
-                                                  ExchangesIntegratedType.BitcoinTrade, 
+                                                  ExchangesIntegratedType.BitcoinTrade,
+                                                  ExchangeCacheEntityType.SymbolPrice,
                                                   It.IsAny<Func<TickerPrice, string>>()))
                 .Returns(Task.CompletedTask);
 

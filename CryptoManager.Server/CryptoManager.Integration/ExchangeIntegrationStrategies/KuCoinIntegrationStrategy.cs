@@ -1,4 +1,5 @@
 ﻿using CryptoManager.Domain.Contracts.Integration;
+using CryptoManager.Domain.Contracts.Integration.Utils;
 using CryptoManager.Domain.DTOs;
 using CryptoManager.Domain.IntegrationEntities.Exchanges;
 using CryptoManager.Domain.IntegrationEntities.Exchanges.KuCoin;
@@ -27,7 +28,7 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
         public async Task<ObjectResult<TickerPriceDTO>> GetCurrentPriceAsync(string baseAssetSymbol, string quoteAssetSymbol)
         {
             var symbol = $"{baseAssetSymbol}-{quoteAssetSymbol}";
-            var price = await _cache.GetAsync<TickerPrice>(ExchangesIntegratedType.KuCoin, symbol);
+            var price = await _cache.GetAsync<TickerPrice>(ExchangesIntegratedType.KuCoin, ExchangeCacheEntityType.SymbolPrice, symbol);
             if (price == null)
             {
                 var response = await _kuCoinIntegrationClient.GetTickersAsync();
@@ -36,7 +37,7 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
                     return ObjectResult<TickerPriceDTO>.Error($"symbol {symbol} does not exist in KuCoin");
                 }
                 price = response.Data.Ticker.FirstOrDefault(a => a.Symbol.Equals(symbol));
-                await _cache.AddAsync(response.Data.Ticker, ExchangesIntegratedType.KuCoin, a => a.Symbol);
+                await _cache.AddAsync(response.Data.Ticker, ExchangesIntegratedType.KuCoin, ExchangeCacheEntityType.SymbolPrice, a => a.Symbol);
                 if(price == null)
                 {
                     return ObjectResult<TickerPriceDTO>.Error($"symbol {symbol} does not exist in KuCoin");
@@ -70,10 +71,15 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
 
         public async Task<IEnumerable<TickerPriceDTO>> GetTickersAsync()
         {
-            var response = await _kuCoinIntegrationClient.GetTickersAsync();
-            await _cache.AddAsync(response.Data.Ticker, ExchangesIntegratedType.Binance, a => a.Symbol);
+            var tickers = await _cache.GetAsync<IEnumerable<TickerPrice>>(ExchangesIntegratedType.KuCoin, ExchangeCacheEntityType.SymbolPriceList);
+            if (tickers == null)
+            {
+                var response = await _kuCoinIntegrationClient.GetTickersAsync();
+                tickers = response.Data.Ticker;
+                await _cache.AddAsync(tickers, ExchangesIntegratedType.KuCoin, ExchangeCacheEntityType.SymbolPriceList);
+            }
             
-            return response.Data.Ticker.Select(a => new TickerPriceDTO
+            return tickers.Select(a => new TickerPriceDTO
             {
                 Symbol = a.Symbol.Replace("-", string.Empty),
                 Price = decimal.Parse(a.Last)

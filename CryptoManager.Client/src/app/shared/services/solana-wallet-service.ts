@@ -12,9 +12,6 @@ import {
 import { environment } from "../../../environments/environment";
 import { WalletName } from "@solana/wallet-adapter-base";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
-import { TorusWalletAdapter } from "@solana/wallet-adapter-torus";
-import { LedgerWalletAdapter } from "@solana/wallet-adapter-ledger";
-import { SolongWalletAdapter } from "@solana/wallet-adapter-solong";
 import { SolflareWalletAdapter } from "@solana/wallet-adapter-solflare";
 import { Observable } from "rxjs";
 
@@ -38,9 +35,6 @@ export class SolanaWalletService {
     this.walletStore.setAdapters([
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter(),
-      new TorusWalletAdapter(),
-      new LedgerWalletAdapter(),
-      new SolongWalletAdapter(),
     ]);
   }
 
