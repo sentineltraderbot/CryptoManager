@@ -56,7 +56,7 @@ export class AccountService {
     this.currentUserSubject.next({} as UserToken);
     this.isAuthenticatedSubject.next(false);
     localStorage.setItem("isLoggedin", "false");
-    if (this.router.url != "/login") {
+    if (this.router.url.includes("sentinel-trader")) {
       this.router.navigate(["login"]);
     }
   }
