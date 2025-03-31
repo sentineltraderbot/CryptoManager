@@ -14,7 +14,17 @@
     "sqlServerName": {
       "value": "sql-sentineltrader-prod-eun"
     },
-    "databasesPlanSku": {
+    "databaseCryptoManagerPlanSku": {
+      "value": {
+        "name": "Basic",
+        "tier": "Basic",
+        "capacity": "5"
+      }
+    },
+    "sqlServerCryptoManagerDBName": {
+      "value": "sqldb-cryptomanager-prod-eun"
+    },
+    "databaseRobotTraderPlanSku": {
       "value": {
         "name": "GP_S_Gen5",
         "tier": "GeneralPurpose",
@@ -22,11 +32,16 @@
         "capacity": 2
       }
     },
-    "sqlServerCryptoManagerDBName": {
-      "value": "sqldb-cryptomanager-prod-eun"
-    },
     "sqlServerRobotTraderDBName": {
       "value": "sqldb-robottrader-prod-eun"
+    },
+    "databaseHistoryPricesPlanSku": {
+      "value": {
+        "name": "GP_S_Gen5",
+        "tier": "GeneralPurpose",
+        "family": "Gen5",
+        "capacity": 2
+      }
     },
     "sqlServerHistoryPricesDBName": {
       "value": "sqldb-historyprices-prod-eun"

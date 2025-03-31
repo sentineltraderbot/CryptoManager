@@ -10,14 +10,20 @@ param keyVaultName string
 @description('Sql Server Name')
 param sqlServerName string
 
-@description('Databases SKU')
-param databasesPlanSku object
+@description('Database CryptoManager SKU')
+param databaseCryptoManagerPlanSku object
 
 @description('Sql Server CryptoManager Database Name')
 param sqlServerCryptoManagerDBName string
 
+@description('Database Robot Trader SKU')
+param databaseRobotTraderPlanSku object
+
 @description('Sql Server Robot Trader DB Name')
 param sqlServerRobotTraderDBName string
+
+@description('Databases History Prices SKU')
+param databaseHistoryPricesPlanSku object
 
 @description('Sql Server History Prices DB Name')
 param sqlServerHistoryPricesDBName string
@@ -98,7 +104,7 @@ module sqlServerCryptoManagerDB 'templates/sql-server-database.bicep' = {
     location: resourceGroup().location
     db_sql_name: sqlServerCryptoManagerDBName
     autoPauseDelay: 60
-    sku: databasesPlanSku
+    sku: databaseCryptoManagerPlanSku
   }
   dependsOn: [sqlServer]
 }
@@ -111,7 +117,7 @@ module sqlServerRobotTraderDB 'templates/sql-server-database.bicep' = {
     location: resourceGroup().location
     db_sql_name: sqlServerRobotTraderDBName
     autoPauseDelay: 60
-    sku: databasesPlanSku
+    sku: databaseRobotTraderPlanSku
   }
   dependsOn: [sqlServer]
 }
@@ -124,7 +130,7 @@ module sqlServerHistoryPricesDB 'templates/sql-server-database.bicep' = {
     location: resourceGroup().location
     db_sql_name: sqlServerHistoryPricesDBName
     autoPauseDelay: 60
-    sku: databasesPlanSku
+    sku: databaseHistoryPricesPlanSku
   }
   dependsOn: [sqlServer]
 }
