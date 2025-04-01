@@ -21,6 +21,15 @@
         "capacity": "5"
       }
     },
+    "databaseCryptoManagerMaxSizeBytes": {
+      "value": 2147483648
+    },
+    "databaseCryptoManagerUseFreeLimit": {
+      "value": false
+    },
+    "databaseCryptoManagerFreeLimitExhaustionBehavior": {
+      "value": ""
+    },
     "sqlServerCryptoManagerDBName": {
       "value": "sqldb-cryptomanager-prod-eun"
     },

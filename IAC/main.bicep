@@ -13,6 +13,15 @@ param sqlServerName string
 @description('Database CryptoManager SKU')
 param databaseCryptoManagerPlanSku object
 
+@description('Database CryptoManager MaxSizeBytes')
+param databaseCryptoManagerMaxSizeBytes int
+
+@description('Database CryptoManager use Free Limit')
+param databaseCryptoManagerUseFreeLimit bool
+
+@description('Database CryptoManager SKU Free Limit Exhaustion Behavior')
+param databaseCryptoManagerFreeLimitExhaustionBehavior string
+
 @description('Sql Server CryptoManager Database Name')
 param sqlServerCryptoManagerDBName string
 
@@ -105,6 +114,9 @@ module sqlServerCryptoManagerDB 'templates/sql-server-database.bicep' = {
     db_sql_name: sqlServerCryptoManagerDBName
     autoPauseDelay: 60
     sku: databaseCryptoManagerPlanSku
+    maxSizeBytes: databaseCryptoManagerMaxSizeBytes
+    freeLimitExhaustionBehavior: databaseCryptoManagerFreeLimitExhaustionBehavior
+    useFreeLimit: databaseCryptoManagerUseFreeLimit
   }
   dependsOn: [sqlServer]
 }
@@ -118,6 +130,8 @@ module sqlServerRobotTraderDB 'templates/sql-server-database.bicep' = {
     db_sql_name: sqlServerRobotTraderDBName
     autoPauseDelay: 60
     sku: databaseRobotTraderPlanSku
+    freeLimitExhaustionBehavior: 'AutoPause'
+    useFreeLimit: true
   }
   dependsOn: [sqlServer]
 }
@@ -131,6 +145,8 @@ module sqlServerHistoryPricesDB 'templates/sql-server-database.bicep' = {
     db_sql_name: sqlServerHistoryPricesDBName
     autoPauseDelay: 60
     sku: databaseHistoryPricesPlanSku
+    freeLimitExhaustionBehavior: 'AutoPause'
+    useFreeLimit: true
   }
   dependsOn: [sqlServer]
 }
