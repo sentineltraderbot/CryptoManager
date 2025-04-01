@@ -1,0 +1,104 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logAnalyticsWorkspaceName": {
+      "value": "log-sentineltrader-prod"
+    },
+    "appInsightsName": {
+      "value": "appi-sentineltrader-prod"
+    },
+    "keyVaultName": {
+      "value": "kv-sentineltrader-prod"
+    },
+    "sqlServerName": {
+      "value": "sql-sentineltrader-prod-eun"
+    },
+    "databaseCryptoManagerPlanSku": {
+      "value": {
+        "name": "Basic",
+        "tier": "Basic",
+        "capacity": "5"
+      }
+    },
+    "databaseCryptoManagerMaxSizeBytes": {
+      "value": 2147483648
+    },
+    "databaseCryptoManagerUseFreeLimit": {
+      "value": false
+    },
+    "databaseCryptoManagerFreeLimitExhaustionBehavior": {
+      "value": ""
+    },
+    "sqlServerCryptoManagerDBName": {
+      "value": "sqldb-cryptomanager-prod-eun"
+    },
+    "databaseRobotTraderPlanSku": {
+      "value": {
+        "name": "GP_S_Gen5",
+        "tier": "GeneralPurpose",
+        "family": "Gen5",
+        "capacity": 2
+      }
+    },
+    "sqlServerRobotTraderDBName": {
+      "value": "sqldb-robottrader-prod-eun"
+    },
+    "databaseHistoryPricesPlanSku": {
+      "value": {
+        "name": "GP_S_Gen5",
+        "tier": "GeneralPurpose",
+        "family": "Gen5",
+        "capacity": 2
+      }
+    },
+    "sqlServerHistoryPricesDBName": {
+      "value": "sqldb-historyprices-prod-eun"
+    },
+    "cryptoManagerServerAppServicePlanName": {
+      "value": "asp-crypto-manager-server-prod-eun"
+    },
+    "cryptoManagerServerAppServicePlanSku": {
+      "value": {
+        "name": "B1",
+        "tier": "Basic",
+        "size": "B1",
+        "family": "B",
+        "capacity": 1
+      }
+    },
+    "cryptoManagerServerWebAppName": {
+      "value": "app-crypto-manager-server-prod-eun"
+    },
+    "cryptoManagerClientAppServicePlanName": {
+      "value": "asp-crypto-manager-client-prod-eun"
+    },
+    "cryptoManagerClientAppServicePlanSku": {
+      "value": {
+        "name": "B1",
+        "tier": "Basic",
+        "size": "B1",
+        "family": "B",
+        "capacity": 1
+      }
+    },
+    "cryptoManagerClientWebAppName": {
+      "value": "app-crypto-manager-client-prod-eun"
+    },
+    "robotTraderApiAppServicePlanName": {
+      "value": "asp-robot-trader-api-prod-eun"
+    },
+    "robotTraderApiAppServicePlanSku": {
+      "value": {
+        "name": "B1",
+        "tier": "Basic",
+        "size": "B1",
+        "family": "B",
+        "capacity": 1
+      }
+    },
+    "robotTraderApiWebAppName": {
+      "value": "app-robot-trader-api-prod-eun"
+    }
+  }
+}

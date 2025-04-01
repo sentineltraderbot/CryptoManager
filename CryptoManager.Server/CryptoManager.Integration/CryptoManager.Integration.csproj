@@ -8,8 +8,28 @@
     <ProjectReference Include="..\CryptoManager.Domain\CryptoManager.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Refit" Version="7.2.1" />
-    <PackageReference Include="Refit.HttpClientFactory" Version="7.2.1" />
-    <PackageReference Include="Polly" Version="8.4.1" />
+    <PackageReference Include="BifrostSecurity" Version="1.0.1" />
+    <PackageReference Include="Refit" Version="8.0.0" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
+    <PackageReference Include="Polly" Version="8.5.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0" />
+    <!-- <PackageReference Include="Solnet.Wallet" Version="6.1.0" />
+    <PackageReference Include="Solnet.Rpc" Version="6.1.0" />
+    <PackageReference Include="Solnet.Extensions" Version="6.1.0" /> -->
+  </ItemGroup>
+  <ItemGroup>
+     <Reference Include="Solnet.Wallet">
+       <HintPath>..\references\Solnet.Wallet.dll</HintPath>
+     </Reference>
+     <Reference Include="Solnet.Rpc">
+       <HintPath>..\references\Solnet.Rpc.dll</HintPath>
+     </Reference>
+     <Reference Include="Solnet.Extensions">
+       <HintPath>..\references\Solnet.Extensions.dll</HintPath>
+     </Reference>
+     <Reference Include="Solnet.Programs">
+       <HintPath>..\references\Solnet.Programs.dll</HintPath>
+     </Reference>
   </ItemGroup>
 </Project>

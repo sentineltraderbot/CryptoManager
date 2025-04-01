@@ -1,42 +1,66 @@
 <div class="row" [@routerTransition]>
   <div class="col-sm-12">
     <div class="card mb-3">
-      <div class="card-header">{{ 'Exchanges' | translate }}</div>
+      <div class="card-header">{{ "Exchanges" | translate }}</div>
       <div class="card-body">
-        <button routerLink="/exchange/new" class="btn btn-secondary" [hidden]="!user.isAdmin">{{ 'Add' | translate }}</button>
-        <br/>
-        <br/>
+        <button
+          routerLink="new"
+          class="btn btn-secondary"
+          [hidden]="!user.isAdmin"
+        >
+          {{ "Add" | translate }}
+        </button>
+        <br />
+        <br />
         <div class="table-responsive">
           <table class="table">
-              <thead>
-                <tr>
-                  <th data-field="name">{{ 'Name' | translate }}</th>
-                  <th data-field="website">{{ 'Website' | translate }}</th>
-                  <th data-field="apiUrl">{{ 'Api URL' | translate }}</th>
-                  <th data-field="exchangeType">{{ 'Exchange Type' | translate }}</th>
-                  <th data-field="isEnabled">{{ 'Enabled' | translate }}</th>
-                  <th [hidden]="!user.isAdmin">{{ 'Edit' | translate }}</th>
-                  <th [hidden]="!user.isAdmin">{{ 'Delete' | translate }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let exchange of exchanges">
-                  <td>{{ exchange.name }}</td>
-                  <td>{{ exchange.website }}</td>
-                  <td>{{ exchange.apiUrl }}</td>
-                  <td>{{ getExchangeType(exchange.exchangeType) }}</td>
-                  <td><input type="checkbox" [(ngModel)]="exchange.isEnabled" name="isEnabled" disabled></td>
-                  <td [hidden]="!user.isAdmin">
-                    <i [routerLink]="['/exchange', exchange.id]" class="fa fa-fw fa-pencil-square-o"></i>
-                  </td>
-                  <td [hidden]="!user.isAdmin">
-                    <i (click)="delete(exchange)" class="fa fa-fw fa-times"></i>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <button [hidden]="!user.isAdmin" routerLink="/exchange/new" class="btn btn-secondary">{{ 'Add' | translate }}</button>
+            <thead>
+              <tr>
+                <th data-field="name">{{ "Name" | translate }}</th>
+                <th data-field="website">{{ "Website" | translate }}</th>
+                <th data-field="apiUrl">{{ "Api URL" | translate }}</th>
+                <th data-field="exchangeType">
+                  {{ "Exchange Type" | translate }}
+                </th>
+                <th data-field="isEnabled">{{ "Enabled" | translate }}</th>
+                <th [hidden]="!user.isAdmin">{{ "Edit" | translate }}</th>
+                <th [hidden]="!user.isAdmin">{{ "Delete" | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let exchange of exchanges">
+                <td>{{ exchange.name }}</td>
+                <td>{{ exchange.website }}</td>
+                <td>{{ exchange.apiUrl }}</td>
+                <td>{{ getExchangeType(exchange.exchangeType) }}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="exchange.isEnabled"
+                    name="isEnabled"
+                    disabled
+                  />
+                </td>
+                <td [hidden]="!user.isAdmin">
+                  <i
+                    [routerLink]="[exchange.id]"
+                    class="fa fa-fw fa-pencil-square-o"
+                  ></i>
+                </td>
+                <td [hidden]="!user.isAdmin">
+                  <i (click)="delete(exchange)" class="fa fa-fw fa-times"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button
+          [hidden]="!user.isAdmin"
+          routerLink="new"
+          class="btn btn-secondary"
+        >
+          {{ "Add" | translate }}
+        </button>
       </div>
     </div>
   </div>

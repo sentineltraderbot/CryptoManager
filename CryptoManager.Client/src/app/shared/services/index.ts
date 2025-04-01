@@ -9,3 +9,6 @@ export * from "./alert-handler.service";
 export * from "./setup-trader.service";
 export * from "./back-test-setup-trader.service";
 export * from "./chart.service";
+export * from "./ticker.service";
+export * from "./solana-wallet-service";
+export * from "./sentinel-trader-bot-token-service";

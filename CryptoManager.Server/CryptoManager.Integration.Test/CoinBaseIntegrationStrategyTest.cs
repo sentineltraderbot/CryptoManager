@@ -1,4 +1,5 @@
-﻿using CryptoManager.Domain.IntegrationEntities.Exchanges;
+﻿using CryptoManager.Domain.Contracts.Integration.Utils;
+using CryptoManager.Domain.IntegrationEntities.Exchanges;
 using CryptoManager.Domain.IntegrationEntities.Exchanges.Coinbase;
 using CryptoManager.Integration.Clients;
 using CryptoManager.Integration.ExchangeIntegrationStrategies;
@@ -21,11 +22,12 @@ namespace CryptoManager.Integration.Test
             TickerPrice ticker = null;
             var symbol = "BTC-GBP";
             var cacheMock = new Mock<IExchangeIntegrationCache>(MockBehavior.Strict);
-            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.Coinbase, symbol))
+            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.Coinbase, ExchangeCacheEntityType.SymbolPrice, symbol))
                 .ReturnsAsync(ticker);
 
             cacheMock.Setup(repo => repo.AddAsync(It.IsAny<TickerPrice>(), 
-                                                  ExchangesIntegratedType.Coinbase, 
+                                                  ExchangesIntegratedType.Coinbase,
+                                                  ExchangeCacheEntityType.SymbolPrice,
                                                   It.IsAny<string>()))
                 .Returns(Task.CompletedTask);
 
@@ -35,7 +37,7 @@ namespace CryptoManager.Integration.Test
 
             var strategy = new CoinbaseIntegrationStrategy(cacheMock.Object, clientMock.Object);
             var price = await strategy.GetCurrentPriceAsync("BTC", "GBP");
-            Assert.Equal(1, price.Item);
+            Assert.Equal(1, price.Item.Price);
         }
 
 
@@ -45,11 +47,12 @@ namespace CryptoManager.Integration.Test
             TickerPrice ticker = null;
             var symbol = "nuncatera-jsdhjkdhsajkdh";
             var cacheMock = new Mock<IExchangeIntegrationCache>(MockBehavior.Strict);
-            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.Coinbase, symbol))
+            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.Coinbase, ExchangeCacheEntityType.SymbolPrice, symbol))
                 .ReturnsAsync(ticker);
 
             cacheMock.Setup(repo => repo.AddAsync(It.IsAny<TickerPrice>(),
                                                   ExchangesIntegratedType.Coinbase,
+                                                  ExchangeCacheEntityType.SymbolPrice,
                                                   It.IsAny<string>()))
                 .Returns(Task.CompletedTask);
 
@@ -59,7 +62,7 @@ namespace CryptoManager.Integration.Test
 
             var strategy = new CoinbaseIntegrationStrategy(cacheMock.Object, clientMock.Object);
             var price = await strategy.GetCurrentPriceAsync("nuncatera", "jsdhjkdhsajkdh");
-            Assert.Equal(0, price.Item);
+            Assert.Equal(0, price.Item.Price);
         }
     }
 }

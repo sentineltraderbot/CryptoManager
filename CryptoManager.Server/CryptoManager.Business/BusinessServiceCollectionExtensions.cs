@@ -11,6 +11,8 @@ namespace CryptoManager.Business
         public static IServiceCollection AddBusiness(this IServiceCollection services)
         {
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ISentinelTraderBotTokenService, SentinelTraderBotTokenService>();
 
             return services;
         }

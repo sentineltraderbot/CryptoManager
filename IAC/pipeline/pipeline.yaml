@@ -1,0 +1,37 @@
+trigger: none
+
+parameters:
+  - name: environment
+    displayName: 'Select Environment'
+    type: string
+    default: 'test'
+    values:
+      - test
+      - prod
+
+stages:
+  - stage: Deploy_Infrastructure
+    displayName: Deploy Infrastructure to ${{ parameters.environment }}
+    jobs:
+      - job: DeployBicep
+        displayName: Deploy Bicep to Azure
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - script: |
+              echo "Checking if Bicep file exists..."
+              ls -la $(Build.SourcesDirectory)/IAC/main.bicep
+              echo "Checking if parameters file exists..."
+              ls -la $(Build.SourcesDirectory)/IAC/variables/variables-${{ parameters.environment }}.json
+            displayName: 'Validate File Paths'
+
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'sentinel-trader-sc-${{ parameters.environment }}'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                az deployment group create \
+                  --resource-group rg-sentineltrader-${{ parameters.environment }} \
+                  --template-file $(Build.SourcesDirectory)/IAC/main.bicep \
+                  --parameters @$(Build.SourcesDirectory)/IAC/variables/variables-${{ parameters.environment }}.json

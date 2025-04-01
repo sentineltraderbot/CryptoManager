@@ -6,6 +6,13 @@ const routes: Routes = [
   {
     path: "",
     loadChildren: () =>
+      import("./landing-page/landing-page.module").then(
+        (m) => m.LandingPageModule
+      ),
+  },
+  {
+    path: "sentinel-trader",
+    loadChildren: () =>
       import("./layout/layout.module").then((m) => m.LayoutModule),
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
@@ -15,11 +22,11 @@ const routes: Routes = [
     loadChildren: () =>
       import("./login/login.module").then((m) => m.LoginModule),
   },
-  {
-    path: "signup",
-    loadChildren: () =>
-      import("./signup/signup.module").then((m) => m.SignupModule),
-  },
+  // {
+  //   path: "signup",
+  //   loadChildren: () =>
+  //     import("./signup/signup.module").then((m) => m.SignupModule),
+  // },
   {
     path: "error",
     loadChildren: () =>
@@ -49,6 +56,13 @@ const routes: Routes = [
     loadChildren: () =>
       import("./privacy-policy/privacy-policy.module").then(
         (m) => m.PrivacyPolicyModule
+      ),
+  },
+  {
+    path: "white-paper",
+    loadChildren: () =>
+      import("./white-paper/white-paper.module").then(
+        (m) => m.WhitePaperModule
       ),
   },
   { path: "**", redirectTo: "not-found" },

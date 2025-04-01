@@ -15,7 +15,7 @@ namespace CryptoManager.Repository.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.13");
 
             modelBuilder.Entity("CryptoManager.Domain.Entities.ApplicationRole", b =>
                 {
@@ -76,6 +76,9 @@ namespace CryptoManager.Repository.Migrations
                     b.Property<string>("GoogleId")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("HasReceivedAirdrop")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("LastName")
                         .HasColumnType("TEXT");
 
@@ -109,6 +112,9 @@ namespace CryptoManager.Repository.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SolanaWalletAddress")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("TwoFactorEnabled")

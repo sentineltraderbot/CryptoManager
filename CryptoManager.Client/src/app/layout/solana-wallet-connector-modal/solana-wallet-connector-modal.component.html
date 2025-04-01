@@ -1,0 +1,83 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ "Solana Wallet Connection" | translate }}</h4>
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div *ngIf="isChrome()">
+    <p>
+      Please install the Chrome wallet extension before requesting the airdrop.
+    </p>
+  </div>
+  <div>
+    <fieldset class="form-group">
+      <label>{{ "Wallet" | translate }}</label>
+      <ng-select
+        [items]="wallets"
+        (ngModelChange)="onSelectWallet($event)"
+        bindLabel="adapter.name"
+        bindValue="adapter.name"
+        [(ngModel)]="walletName"
+        #walletConnected="ngModel"
+        appendTo="body"
+        name="walletConnected"
+        required
+      >
+      </ng-select>
+    </fieldset>
+  </div>
+  <button
+    type="button"
+    class="btn"
+    [disabled]="solanaWalletService.isSolanaWalletConnected() || !walletName"
+    (click)="onConnect()"
+  >
+    Connect
+  </button>
+  <button
+    type="button"
+    class="btn"
+    [disabled]="!solanaWalletService.isSolanaWalletConnected()"
+    (click)="onDisconnect()"
+  >
+    Disconnect
+  </button>
+
+  <div *ngIf="!isChrome()">
+    <p>
+      Airdrop requests are not supported on this browser. Please use Google
+      Chrome on a desktop.
+    </p>
+  </div>
+  <div *ngIf="errorMessage">
+    <p>
+      {{ errorMessage }}
+    </p>
+  </div>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-secondary"
+    [disabled]="
+      !solanaWalletService.isSolanaWalletConnected() ||
+      !this.solanaWalletService.getWallet().adapter?.publicKey == null
+    "
+    (click)="onClaimAirdrop()"
+  >
+    {{ "Claim Airdrop" | translate }}
+  </button>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    (click)="activeModal.close(false)"
+  >
+    {{ "Cancel" | translate }}
+  </button>
+</div>

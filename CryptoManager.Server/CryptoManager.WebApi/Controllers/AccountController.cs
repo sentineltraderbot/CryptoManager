@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using CryptoManager.Domain.Contracts.Business;
+using CryptoManager.Domain.DTOs;
 using CryptoManager.Domain.Entities;
 using CryptoManager.Domain.IntegrationEntities.Facebook;
 using CryptoManager.WebApi.Utils;
@@ -25,18 +27,19 @@ namespace CryptoManager.WebApi.Controllers
     public class AccountController : BaseController
     {
         private readonly JwtFactory _jwtFactory;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private static readonly HttpClient _client = new HttpClient();
+        private readonly IAccountService _accountService;
 
         public AccountController(JwtFactory jwtFactory,
                                  SignInManager<ApplicationUser> signInManager,
                                  UserManager<ApplicationUser> userManager,
+                                 IAccountService accountService,
                                  IMapper mapper) : base(mapper)
         {
             _jwtFactory = jwtFactory;
-            _signInManager = signInManager;
             _userManager = userManager;
+            _accountService = accountService;
         }
 
         /// <summary>
@@ -44,14 +47,15 @@ namespace CryptoManager.WebApi.Controllers
         /// </summary>
         /// <response code="400">If the user not logged</response>
         [HttpGet]
+        [ProducesResponseType(typeof(ApplicationUserDTO), 200)]
         [ProducesResponseType(typeof(ObjectResult), 400)]
         public async Task<IActionResult> GetUserInfo()
         {
             if (User.Identity.IsAuthenticated)
             {
-                return new ObjectResult(await _userManager.FindByIdAsync(GetUserId().ToString()));
+                return new OkObjectResult(_mapper.Map<ApplicationUserDTO>(await _accountService.GetUserAsync(GetUserId())));
             }
-            return BadRequest();
+            return new ForbidResult();
         }
 
         /// <summary>
@@ -86,7 +90,12 @@ namespace CryptoManager.WebApi.Controllers
                 var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
 
                 // 4. ready to create the local user account (if necessary) and jwt
-                return await GetOrCreateUser(_mapper.Map<ApplicationUser>(userInfo));
+                var userResponse = await _accountService.UpdateOrCreateUserAsync(_mapper.Map<ApplicationUser>(userInfo));
+                if (!userResponse.HasSucceded)
+                {
+                    return new BadRequestObjectResult(userResponse.ErrorMessage);
+                }
+                return new OkObjectResult(await GenerateToken(userResponse.Item));
             }
             catch (Exception ex)
             {
@@ -103,66 +112,18 @@ namespace CryptoManager.WebApi.Controllers
             try
             {
                 var userInfo = await GoogleJsonWebSignature.ValidateAsync(token);
-                return await GetOrCreateUser(_mapper.Map<ApplicationUser>(userInfo));
+                var userResponse = await _accountService.UpdateOrCreateUserAsync(_mapper.Map<ApplicationUser>(userInfo));
+                if (!userResponse.HasSucceded)
+                {
+                    return new BadRequestObjectResult(userResponse.ErrorMessage);
+                }
+                return new OkObjectResult(await GenerateToken(userResponse.Item));
+
             }
             catch (Exception ex)
             {
                 return new BadRequestObjectResult(ex.Message);
             }
-        }
-
-        private async Task<IActionResult> GetOrCreateUser(ApplicationUser userInfo)
-        {
-            var user = await _userManager.FindByEmailAsync(userInfo.Email);
-
-            if (user == null)
-            {
-                var result = await _userManager.CreateAsync(userInfo, Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));                    
-                if (!result.Succeeded)
-                    return new BadRequestObjectResult(result);
-
-                result = await AddSuperUserInRoleAdmin(userInfo);
-                if (result != null && !result.Succeeded)
-                    return new BadRequestObjectResult(result);
-            }
-            else
-            {
-                user.FacebookId = userInfo.FacebookId;
-                user.GoogleId = userInfo.GoogleId;
-                user.FirstName = userInfo.FirstName;
-                user.LastName = userInfo.LastName;
-                user.PictureUrl = userInfo.PictureUrl;
-                user.Gender = userInfo.Gender;
-                user.Locale = userInfo.Locale;
-                var result = await _userManager.UpdateAsync(user);
-                if (!result.Succeeded)
-                    return new BadRequestObjectResult(result);
-
-                result = await AddSuperUserInRoleAdmin(user);
-                if (result != null && !result.Succeeded)
-                    return new BadRequestObjectResult(result);
-            }
-
-            user = await _userManager.FindByEmailAsync(userInfo.Email);
-
-            if (user == null)
-            {
-                return new BadRequestObjectResult("login_failure - message:Failed to create local user account.");
-            }
-            await _signInManager.SignInAsync(user, true, "Bearer");
-            return new OkObjectResult(await GenerateToken(user));
-        }
-
-        private async Task<IdentityResult> AddSuperUserInRoleAdmin(ApplicationUser user)
-        {
-            if (user.Email.Equals(WebUtil.SuperUserEmail))
-            {
-                if (!await _userManager.IsInRoleAsync(user, WebUtil.ADMINISTRATOR_ROLE_NAME))
-                {
-                    return await _userManager.AddToRoleAsync(user, WebUtil.ADMINISTRATOR_ROLE_NAME);
-                }
-            }
-            return null;
         }
 
         private async Task<string> GenerateToken(ApplicationUser user)

@@ -13,7 +13,7 @@ namespace CryptoManager.WebApi.Controllers
     [Route("api/order")]
     [ApiController]
     public class OrderController : BaseController
-    {   
+    {
         private readonly IOrderRepository _repository;
         private readonly IOrderService _business;
 
@@ -60,7 +60,7 @@ namespace CryptoManager.WebApi.Controllers
         /// <response code="200">if success</response>
         [HttpPut]
         [ProducesResponseType(typeof(ObjectResult), 200)]
-        public async Task<IActionResult> Put([FromBody] OrderDTO entity)
+        public Task<IActionResult> Put([FromBody] OrderDTO entity)
         {
             throw new NotImplementedException();
         }

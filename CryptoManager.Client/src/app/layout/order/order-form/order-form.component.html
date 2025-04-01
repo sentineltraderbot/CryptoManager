@@ -101,7 +101,10 @@
       >
         {{ "Create Order" | translate }}
       </button>
-      <button class="btn btn-secondary" routerLink="/order">
+      <button
+        class="btn btn-secondary"
+        [routerLink]="['/sentinel-trader/order']"
+      >
         {{ "Back" | translate }}
       </button>
     </div>

@@ -1,8 +1,4 @@
-import {
-  throwError as observableThrowError,
-  Observable,
-  BehaviorSubject,
-} from "rxjs";
+import { Observable, BehaviorSubject, throwError } from "rxjs";
 import { Injectable } from "@angular/core";
 import {
   HttpEvent,
@@ -59,7 +55,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           this.accountService.purgeAuth();
         }
         //return the error to the method that called it
-        return observableThrowError(error);
+        return throwError(() => new Error(error));
       }),
       finalize(() => {
         if (!req.urlWithParams.endsWith("/ping")) {

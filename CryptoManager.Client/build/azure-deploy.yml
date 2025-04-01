@@ -63,11 +63,11 @@ jobs:
         rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)/public'
 
     - task: AzureRmWebAppDeployment@4
-      displayName: 'Azure App Service Deploy app-${{ parameters.webAppName }}-${{ parameters.environment }}'
+      displayName: 'Azure App Service Deploy app-${{ parameters.webAppName }}-${{ parameters.environment }}-eun'
       inputs:
         azureSubscription: ${{ parameters.azureSubscription }}
         appType: webAppLinux
-        WebAppName: 'app-${{ parameters.webAppName }}-${{ parameters.environment }}'
+        WebAppName: 'app-${{ parameters.webAppName }}-${{ parameters.environment }}-eun'
         packageForLinux: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
         enableCustomDeployment: true
         ExcludeFilesFromAppDataFlag: false

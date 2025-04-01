@@ -2,8 +2,7 @@
   - master
 
 variables:
-  azureSubscription: 'all items'
-  webAppName: 'cryptomanager-server'
+  webAppName: 'crypto-manager-server'
 
 stages:
   - stage: Build
@@ -16,13 +15,6 @@ stages:
           vmImage: windows-latest
 
         steps:
-          - task: mattlabrum.build-task.custom-build-task.downloadsSecureFile@0
-            displayName: 'Download appsettings from library file secrets'
-            inputs:
-              fileInput: secrets.json
-              targetPath: CryptoManager.Server/CryptoManager.WebApi/
-              targetName: appsettings.json
-
           - task: DotNetCoreCLI@2
             displayName: Restore
             inputs:
@@ -35,6 +27,13 @@ stages:
               command: test
               projects: '**/*Test/*.csproj'
               arguments: '--collect "Code coverage"'
+
+          - task: CopyFiles@2
+            displayName: 'Copy SQL Scripts to Artifact Staging Directory'
+            inputs:
+              SourceFolder: '$(System.DefaultWorkingDirectory)/CryptoManager.Server/CryptoManager.Repository/scripts'
+              Contents: '**/*.sql'
+              TargetFolder: '$(build.artifactstagingdirectory)/sql-scripts'
 
           - task: DotNetCoreCLI@2
             displayName: Publish
@@ -49,18 +48,30 @@ stages:
 
   - stage: Test_deployment
     displayName: Test deployment
+    variables:
+      - template: azure-variables.yml
+        parameters:
+          environment: 'test'
     jobs:
       - template: azure-deploy.yml
         parameters:
           environment: 'test'
-          azureSubscription: $(azureSubscription)
+          azureSubscription: 'sentinel-trader-sc-test'
           webAppName: $(webAppName)
+          sqlServerName: 'sql-sentineltrader-test-eun.database.windows.net'
+          databaseName: 'sqldb-cryptomanager-test-eun'
 
   - stage: Prod_deployment
     displayName: Prod deployment
+    variables:
+      - template: azure-variables.yml
+        parameters:
+          environment: 'prod'
     jobs:
       - template: azure-deploy.yml
         parameters:
           environment: 'prod'
-          azureSubscription: $(azureSubscription)
+          azureSubscription: 'sentinel-trader-sc-prod'
           webAppName: $(webAppName)
+          sqlServerName: 'sql-sentineltrader-prod-eun.database.windows.net'
+          databaseName: 'sqldb-cryptomanager-prod-eun'

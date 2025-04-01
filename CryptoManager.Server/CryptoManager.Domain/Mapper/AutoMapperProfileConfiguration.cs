@@ -41,6 +41,8 @@ namespace CryptoManager.Domain.Mapper
                 .ForMember(dest => dest.LastName, opts => opts.MapFrom(src => src.FamilyName))
                 .ForMember(dest => dest.Locale, opts => opts.MapFrom(src => src.Locale))
                 .ForMember(dest => dest.PictureUrl, opts => opts.MapFrom(src => src.Picture));
+            CreateMap<ApplicationUser, ApplicationUserDTO>()
+                .ForMember(dest => dest.ImageURL, opts => opts.MapFrom(src => src.PictureUrl));;
         }
     }
 }

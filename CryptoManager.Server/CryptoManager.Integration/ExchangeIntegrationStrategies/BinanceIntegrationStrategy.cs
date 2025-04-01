@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CryptoManager.Domain.Contracts.Integration;
+using CryptoManager.Domain.Contracts.Integration.Utils;
 using CryptoManager.Domain.DTOs;
 using CryptoManager.Domain.IntegrationEntities.Exchanges;
 using CryptoManager.Domain.IntegrationEntities.Exchanges.Binance;
@@ -10,7 +12,7 @@ using CryptoManager.Integration.Utils;
 
 namespace CryptoManager.Integration.ExchangeIntegrationStrategies
 {
-    public class BinanceIntegrationStrategy : IExchangeIntegrationStrategy
+    public class BinanceIntegrationStrategy : IExchangeIntegrationStrategy, IExchangeIntegrationTickersStrategy
     {
         private readonly IBinanceIntegrationClient _binanceIntegrationClient;
         private readonly IExchangeIntegrationCache _cache;
@@ -25,21 +27,27 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
                 throw new ArgumentNullException(nameof(binanceIntegrationClient));
         }
 
-        public async Task<ObjectResult<decimal>> GetCurrentPriceAsync(string baseAssetSymbol, string quoteAssetSymbol)
+        public async Task<ObjectResult<TickerPriceDTO>> GetCurrentPriceAsync(string baseAssetSymbol, string quoteAssetSymbol)
         {
             var symbol = $"{baseAssetSymbol}{quoteAssetSymbol}";
-            var price = await _cache.GetAsync<TickerPrice>(ExchangesIntegratedType.Binance, symbol);
+            var price = await _cache.GetAsync<TickerPrice>(ExchangesIntegratedType.Binance, ExchangeCacheEntityType.SymbolPrice, symbol);
             if (price == null)
             {
                 var listPrices = await _binanceIntegrationClient.GetTickerPricesAsync();
                 price = listPrices.FirstOrDefault(a => a.Symbol.Equals(symbol));
-                await _cache.AddAsync(listPrices, ExchangesIntegratedType.Binance, a => a.Symbol);
+                await _cache.AddAsync(listPrices, ExchangesIntegratedType.Binance, ExchangeCacheEntityType.SymbolPrice, a => a.Symbol);
                 if(price == null)
                 {
-                    return ObjectResult<decimal>.Error($"symbol {symbol} not exists in Binance");
+                    return ObjectResult<TickerPriceDTO>.Error($"symbol {symbol} does not exist in Binance");
                 }
             }
-            return ObjectResult<decimal>.Success(decimal.Parse(price.Price));
+            return ObjectResult<TickerPriceDTO>.Success(
+                new TickerPriceDTO
+                {
+                    Symbol = price.Symbol,
+                    Price = decimal.Parse(price.Price)
+                }
+            );
         }
 
         public async Task<SimpleObjectResult> TestIntegrationUpAsync()
@@ -52,6 +60,22 @@ namespace CryptoManager.Integration.ExchangeIntegrationStrategies
             {
                 return SimpleObjectResult.Error(ex.Message);
             }
+        }
+
+        public async Task<IEnumerable<TickerPriceDTO>> GetTickersAsync()
+        {
+            var tickers = await _cache.GetAsync<IEnumerable<TickerPrice>>(ExchangesIntegratedType.Binance, ExchangeCacheEntityType.SymbolPriceList);
+            if (tickers == null)
+            {
+                tickers = await _binanceIntegrationClient.GetTickerPricesAsync();
+                await _cache.AddAsync(tickers, ExchangesIntegratedType.Binance, ExchangeCacheEntityType.SymbolPriceList);
+            }
+
+            return tickers.Select(a => new TickerPriceDTO
+            {
+                Symbol = a.Symbol,
+                Price = decimal.Parse(a.Price)
+            });
         }
     }
 }

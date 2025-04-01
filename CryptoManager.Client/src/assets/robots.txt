@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /sentinel-trader/
+Disallow: /error/
+Disallow: /access-denied/
+Disallow: /not-found/
+Disallow: /health/
+Disallow: /privacy-policy/
+Allow: /
+
+Sitemap: https://www.sentineltraderbot.com/assets/sitemap.xml

@@ -1,0 +1,105 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logAnalyticsWorkspaceName": {
+      "value": "log-sentineltrader-test"
+    },
+    "appInsightsName": {
+      "value": "appi-sentineltrader-test"
+    },
+    "keyVaultName": {
+      "value": "kv-sentineltrader-test"
+    },
+    "sqlServerName": {
+      "value": "sql-sentineltrader-test-eun"
+    },
+    "databaseCryptoManagerPlanSku": {
+      "value": {
+        "name": "GP_S_Gen5",
+        "tier": "GeneralPurpose",
+        "family": "Gen5",
+        "capacity": 2
+      }
+    },
+    "databaseCryptoManagerMaxSizeBytes": {
+      "value": 34359738368
+    },
+    "databaseCryptoManagerUseFreeLimit": {
+      "value": true
+    },
+    "databaseCryptoManagerFreeLimitExhaustionBehavior": {
+      "value": "AutoPause"
+    },
+    "sqlServerCryptoManagerDBName": {
+      "value": "sqldb-cryptomanager-test-eun"
+    },
+    "databaseRobotTraderPlanSku": {
+      "value": {
+        "name": "GP_S_Gen5",
+        "tier": "GeneralPurpose",
+        "family": "Gen5",
+        "capacity": 2
+      }
+    },
+    "sqlServerRobotTraderDBName": {
+      "value": "sqldb-robottrader-test-eun"
+    },
+    "databaseHistoryPricesPlanSku": {
+      "value": {
+        "name": "GP_S_Gen5",
+        "tier": "GeneralPurpose",
+        "family": "Gen5",
+        "capacity": 2
+      }
+    },
+    "sqlServerHistoryPricesDBName": {
+      "value": "sqldb-historyprices-test-eun"
+    },
+    "cryptoManagerServerAppServicePlanName": {
+      "value": "asp-crypto-manager-server-test-eun"
+    },
+    "cryptoManagerServerAppServicePlanSku": {
+      "value": {
+        "name": "F1",
+        "tier": "Free",
+        "size": "F1",
+        "family": "F",
+        "capacity": 1
+      }
+    },
+    "cryptoManagerServerWebAppName": {
+      "value": "app-crypto-manager-server-test-eun"
+    },
+    "cryptoManagerClientAppServicePlanName": {
+      "value": "asp-crypto-manager-client-test-eun"
+    },
+    "cryptoManagerClientAppServicePlanSku": {
+      "value": {
+        "name": "F1",
+        "tier": "Free",
+        "size": "F1",
+        "family": "F",
+        "capacity": 1
+      }
+    },
+    "cryptoManagerClientWebAppName": {
+      "value": "app-crypto-manager-client-test-eun"
+    },
+    "robotTraderApiAppServicePlanName": {
+      "value": "asp-robot-trader-api-test-eun"
+    },
+    "robotTraderApiAppServicePlanSku": {
+      "value": {
+        "name": "F1",
+        "tier": "Free",
+        "size": "F1",
+        "family": "F",
+        "capacity": 1
+      }
+    },
+    "robotTraderApiWebAppName": {
+      "value": "app-robot-trader-api-test-eun"
+    }
+  }
+}

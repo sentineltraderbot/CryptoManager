@@ -13,7 +13,8 @@ namespace CryptoManager.Domain.Entities
         public string Gender { get; set; }
         public string Locale { get; set; }
         public string PictureUrl { get; set; }
-
+        public bool HasReceivedAirdrop { get; set; }
+        public string SolanaWalletAddress { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

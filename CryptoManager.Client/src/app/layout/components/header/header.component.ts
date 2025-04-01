@@ -1,53 +1,68 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { AccountService, User } from '../../../shared';
+import { Component, OnInit } from "@angular/core";
+import { Router, NavigationEnd } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
+import {
+  AccountService,
+  AlertHandlerService,
+  UserDetails,
+} from "../../../shared";
 
 @Component({
-    selector: 'app-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss']
+  selector: "app-header",
+  templateUrl: "./header.component.html",
+  styleUrls: ["./header.component.scss"],
 })
 export class HeaderComponent implements OnInit {
-    pushRightClass: string = 'push-right';
-    currentUser: User;
+  pushRightClass: string = "push-right";
+  userDetails: UserDetails;
 
-    constructor(private translate: TranslateService, public router: Router, private accountService: AccountService) {
-        this.router.events.subscribe(val => {
-            if (val instanceof NavigationEnd && window.innerWidth <= 992 && this.isToggled()) {
-                this.toggleSidebar();
-            }
-        });
-    }
+  constructor(
+    private translate: TranslateService,
+    public router: Router,
+    private accountService: AccountService
+  ) {
+    this.router.events.subscribe((val) => {
+      if (
+        val instanceof NavigationEnd &&
+        window.innerWidth <= 992 &&
+        this.isToggled()
+      ) {
+        this.toggleSidebar();
+      }
+    });
+  }
 
-    ngOnInit() {
-        this.accountService.currentUser.subscribe(
-            (userData) => {
-                this.currentUser = userData;
-            }
-        );
-    }
+  ngOnInit() {
+    this.getUserDetails();
+  }
 
-    isToggled(): boolean {
-        const dom: Element = document.querySelector('body');
-        return dom.classList.contains(this.pushRightClass);
-    }
+  getUserDetails(shouldGet: boolean = true) {
+    if (!shouldGet) return;
+    this.accountService.getUserDetails().subscribe((userData) => {
+      this.userDetails = userData;
+    });
+  }
 
-    toggleSidebar() {
-        const dom: any = document.querySelector('body');
-        dom.classList.toggle(this.pushRightClass);
-    }
+  isToggled(): boolean {
+    const dom: Element = document.querySelector("body");
+    return dom.classList.contains(this.pushRightClass);
+  }
 
-    rltAndLtr() {
-        const dom: any = document.querySelector('body');
-        dom.classList.toggle('rtl');
-    }
+  toggleSidebar() {
+    const dom: any = document.querySelector("body");
+    dom.classList.toggle(this.pushRightClass);
+  }
 
-    onLoggedout() {
-        this.accountService.purgeAuth();
-    }
+  rltAndLtr() {
+    const dom: any = document.querySelector("body");
+    dom.classList.toggle("rtl");
+  }
 
-    changeLang(language: string) {
-        this.translate.use(language);
-    }
+  onLoggedout() {
+    this.accountService.purgeAuth();
+  }
+
+  changeLang(language: string) {
+    this.translate.use(language);
+  }
 }

@@ -3,7 +3,7 @@
     <div class="card mb-3">
       <div class="card-header">{{ "My Investments" | translate }}</div>
       <div class="card-body">
-        <button routerLink="/order/new" class="btn btn-secondary">
+        <button routerLink="new" class="btn btn-secondary">
           {{ "Add" | translate }}
         </button>
         <br />
@@ -64,7 +64,9 @@
                       ? order.currentPriceErrorMessage
                       : (order.currentPrice | number : "1.2-8")
                   }}
-                  {{ order.quoteAssetSymbol }}
+                  {{
+                    order.currentPriceErrorMessage ? "" : order.quoteAssetSymbol
+                  }}
                 </td>
                 <td class="price">
                   {{ order.valueSoldWithFees | number : "1.2-8" }}
@@ -88,7 +90,7 @@
             </tbody>
           </table>
         </div>
-        <button routerLink="/order/new" class="btn btn-secondary">
+        <button routerLink="new" class="btn btn-secondary">
           {{ "Add" | translate }}
         </button>
       </div>

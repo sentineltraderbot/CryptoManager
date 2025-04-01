@@ -1,61 +1,97 @@
-import { Component, OnInit } from '@angular/core';
-import { routerTransition } from '../../router.animations';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import { routerTransition } from "../../router.animations";
+import { TranslateService } from "@ngx-translate/core";
+import {
+  AlertHandlerService,
+  AlertType,
+  ExchangeType,
+  TickerPrice,
+  TickerService,
+} from "../../shared";
+import { interval, Subscription } from "rxjs";
+import { switchMap, take } from "rxjs/operators";
 
 @Component({
-    selector: 'app-dashboard',
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss'],
-    animations: [routerTransition()]
+  selector: "app-dashboard",
+  templateUrl: "./dashboard.component.html",
+  styleUrls: ["./dashboard.component.scss"],
+  animations: [routerTransition()],
 })
-export class DashboardComponent implements OnInit {
-    public alerts: Array<any> = [];
-    public sliders: Array<any> = [];
+export class DashboardComponent implements OnInit, OnDestroy {
+  tickers: TickerPrice[] = [];
+  previousPrices: { [symbol: string]: number } = {};
+  refreshInterval = 3000; // Updates every 3 seconds
+  autoUpdate = false;
+  subscription!: Subscription;
 
-    constructor() {
-        this.sliders.push(
-            {
-                imagePath: 'assets/images/slider1.jpg',
-                label: 'First slide label',
-                text:
-                    'Nulla vitae elit libero, a pharetra augue mollis interdum.'
-            },
-            {
-                imagePath: 'assets/images/slider2.jpg',
-                label: 'Second slide label',
-                text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-            },
-            {
-                imagePath: 'assets/images/slider3.jpg',
-                label: 'Third slide label',
-                text:
-                    'Praesent commodo cursus magna, vel scelerisque nisl consectetur.'
-            }
-        );
+  constructor(
+    private translate: TranslateService,
+    private tickerService: TickerService,
+    private alertHandlerService: AlertHandlerService,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
-        this.alerts.push(
-            {
-                id: 1,
-                type: 'success',
-                message: `Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptates est animi quibusdam praesentium quam, et perspiciatis,
-                consectetur velit culpa molestias dignissimos
-                voluptatum veritatis quod aliquam! Rerum placeat necessitatibus, vitae dolorum`
-            },
-            {
-                id: 2,
-                type: 'warning',
-                message: `Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptates est animi quibusdam praesentium quam, et perspiciatis,
-                consectetur velit culpa molestias dignissimos
-                voluptatum veritatis quod aliquam! Rerum placeat necessitatibus, vitae dolorum`
-            }
-        );
+  ngOnInit() {
+    this.tickerService
+      .getAllPrices(ExchangeType.Binance)
+      .pipe(take(1))
+      .subscribe({
+        next: (data) => {
+          this.tickers = data.filter((ticker) => ticker.price > 0);
+          this.updatePreviousPrices(this.tickers);
+          this.cdRef.detectChanges();
+        },
+        error: () =>
+          this.alertHandlerService.createAlert(
+            AlertType.Danger,
+            this.translate.instant("CouldNotProcess")
+          ),
+      });
+  }
+
+  startAutoUpdate() {
+    if (this.autoUpdate) {
+      this.subscription = interval(this.refreshInterval)
+        .pipe(
+          switchMap(() => this.tickerService.getAllPrices(ExchangeType.Binance))
+        )
+        .subscribe({
+          next: (data) => {
+            this.tickers = data.filter((ticker) => ticker.price > 0);
+            this.updatePreviousPrices(this.tickers);
+            this.cdRef.detectChanges();
+          },
+          error: () =>
+            this.alertHandlerService.createAlert(
+              AlertType.Danger,
+              this.translate.instant("CouldNotProcess")
+            ),
+        });
     }
+  }
 
-    ngOnInit() {}
-
-    public closeAlert(alert: any) {
-        const index: number = this.alerts.indexOf(alert);
-        this.alerts.splice(index, 1);
+  stopAutoUpdate() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
+  }
+
+  toggleAutoUpdate() {
+    this.stopAutoUpdate();
+    if (this.autoUpdate) {
+      this.startAutoUpdate();
+    }
+  }
+
+  updatePreviousPrices(newTickers: TickerPrice[]) {
+    newTickers.forEach((ticker) => {
+      if (this.previousPrices[ticker.symbol] === undefined) {
+        this.previousPrices[ticker.symbol] = ticker.price;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.stopAutoUpdate();
+  }
 }

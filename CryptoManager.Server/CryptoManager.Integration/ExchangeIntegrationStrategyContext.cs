@@ -17,10 +17,18 @@ namespace CryptoManager.Integration
             _strategies = strategies ?? throw new ArgumentNullException(nameof(strategies));
         }
 
-        public Task<ObjectResult<decimal>> GetCurrentPriceAsync(string baseAssetSymbol, string quoteAssetSymbol, ExchangesIntegratedType exchangesIntegratedType)
+        public Task<ObjectResult<TickerPriceDTO>> GetCurrentPriceAsync(string baseAssetSymbol, string quoteAssetSymbol, ExchangesIntegratedType exchangesIntegratedType)
         {
             var strategy = ResolveStrategy(exchangesIntegratedType);
             return strategy.GetCurrentPriceAsync(baseAssetSymbol, quoteAssetSymbol);
+        }
+
+        public Task<IEnumerable<TickerPriceDTO>> GetTickersAsync(ExchangesIntegratedType exchangesIntegratedType)
+        {
+            var strategy = ResolveStrategy(exchangesIntegratedType);
+            if (strategy is not IExchangeIntegrationTickersStrategy tickersStrategy)
+                throw new InvalidOperationException($"Invalid IntegrationType, invalidType={nameof(exchangesIntegratedType)} on ExchangeIntegrationStrategyContext TickersStrategy");
+            return tickersStrategy.GetTickersAsync();
         }
 
         public Task<SimpleObjectResult> TestIntegrationUpAsync(ExchangesIntegratedType exchangesIntegratedType)

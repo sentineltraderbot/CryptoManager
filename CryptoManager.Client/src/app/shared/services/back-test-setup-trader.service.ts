@@ -6,7 +6,7 @@ import { ApiType } from "../models/index";
 import { BackTestSetupTraderSearchCriteria } from "../models/robo-trader/back-test-setup-trader-search-criteria.model";
 import { BackTestSetupTrader } from "../models/robo-trader/back-test-setup-trader.model";
 import queryString from "query-string";
-import { SimpleObjectResult } from "../models/robo-trader/simple-object-result.model";
+import { SimpleObjectResult } from "../models/simple-object-result.model";
 
 @Injectable()
 export class BackTestSetupTraderService {

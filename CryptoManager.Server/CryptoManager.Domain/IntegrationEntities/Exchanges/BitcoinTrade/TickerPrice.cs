@@ -2,6 +2,7 @@
 {
     public class TickerPrice
     {
-        public decimal Sell { get; set; }
+        public decimal Ask { get; set; }
+        public string Pair { get; set; }
     }
 }

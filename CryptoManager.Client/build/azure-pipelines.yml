@@ -2,8 +2,7 @@ trigger:
   - master
 
 variables:
-  azureSubscription: "all items"
-  webAppName: "cryptomanager-client"
+  webAppName: "crypto-manager-client"
 
 stages:
   - stage: Build
@@ -18,13 +17,13 @@ stages:
         steps:
           - task: NodeTool@0
             inputs:
-              versionSpec: "18.17.1"
+              versionSpec: "20.9.0"
             displayName: "Install Node.js"
           - script: |
               cd '$(System.DefaultWorkingDirectory)/CryptoManager.Client'
               npm install -g @angular/cli
               npm install -f
-              npm install -D typescript@5.1.3          
+              npm install -D typescript@5.3.3          
               npm run build
             displayName: "npm install and build"
 
@@ -48,7 +47,7 @@ stages:
       - template: azure-deploy.yml
         parameters:
           environment: "test"
-          azureSubscription: $(azureSubscription)
+          azureSubscription: "sentinel-trader-sc-test"
           webAppName: $(webAppName)
 
   - stage: Prod_deployment
@@ -57,5 +56,5 @@ stages:
       - template: azure-deploy.yml
         parameters:
           environment: "prod"
-          azureSubscription: $(azureSubscription)
+          azureSubscription: "sentinel-trader-sc-prod"
           webAppName: $(webAppName)

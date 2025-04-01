@@ -148,7 +148,7 @@ namespace CryptoManager.Business.Test
             };
 
             _strategyContext.Setup(strategy => strategy.GetCurrentPriceAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExchangesIntegratedType>()))
-                .ReturnsAsync(ObjectResult<decimal>.Success(10));
+                .ReturnsAsync(ObjectResult<TickerPriceDTO>.Success(new TickerPriceDTO { Price = 10, Symbol = "ETHBTC" }));
 
             _repositoryMock.Setup(repo => repo.GetAllByApplicationUserAsync(It.IsAny<GetOrdersCriteria>())).ReturnsAsync(orderList);
 

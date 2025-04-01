@@ -66,12 +66,13 @@ namespace CryptoManager.WebApi
                 .AddCheck<ExchangeIntegrationHealthCheck>("ExchangeIntegrationPing");
 
             services.AddSingleton<JwtFactory>();
+            services.AddSingleton(_configuration);
 
             services.AddCors();
 
             services.AddControllers(options =>
             {
-                options.Filters.Add(new AuthorizeFilter("Bearer"));
+                options.Filters.Add(new AuthorizeFilter(JwtBearerDefaults.AuthenticationScheme));
             });
 
             services.AddAuthentication(options =>
@@ -174,7 +175,7 @@ namespace CryptoManager.WebApi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "CryptoManager API V1");
             });
 
-            app.EnsureCreateDatabase();
+            //app.EnsureCreateDatabase();
             app.AddRole(WebUtil.ADMINISTRATOR_ROLE_NAME).Wait();
         }
     }

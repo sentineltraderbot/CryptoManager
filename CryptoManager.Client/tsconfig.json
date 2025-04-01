@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
@@ -12,7 +13,7 @@
     "target": "ES2022",
     "typeRoots": ["node_modules/@types"],
     "types": ["node", "jasmine", "facebook-js-sdk"],
-    "lib": ["es2017", "dom"],
+    "lib": ["es2020", "dom"],
     "paths": {
       "core-js/es7/reflect": [
         "../node_modules/core-js/proposals/reflect-metadata"

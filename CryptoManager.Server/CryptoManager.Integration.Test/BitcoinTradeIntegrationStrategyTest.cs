@@ -1,4 +1,5 @@
-﻿using CryptoManager.Domain.IntegrationEntities.Exchanges;
+﻿using CryptoManager.Domain.Contracts.Integration.Utils;
+using CryptoManager.Domain.IntegrationEntities.Exchanges;
 using CryptoManager.Domain.IntegrationEntities.Exchanges.BitcoinTrade;
 using CryptoManager.Integration.Clients;
 using CryptoManager.Integration.ExchangeIntegrationStrategies;
@@ -19,23 +20,24 @@ namespace CryptoManager.Integration.Test
         public async Task Should_Return_Price_Async()
         {
             TickerPrice ticker = null;
-            var symbol = "BRLBTC";
+            var symbol = "BTC_BRL";
             var cacheMock = new Mock<IExchangeIntegrationCache>(MockBehavior.Strict);
-            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.BitcoinTrade, symbol))
+            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.BitcoinTrade, ExchangeCacheEntityType.SymbolPrice, symbol))
                 .ReturnsAsync(ticker);
 
-            cacheMock.Setup(repo => repo.AddAsync(It.IsAny<TickerPrice>(), 
-                                                  ExchangesIntegratedType.BitcoinTrade, 
-                                                  It.IsAny<string>()))
+            cacheMock.Setup(repo => repo.AddAsync(It.IsAny<IEnumerable<TickerPrice>>(), 
+                                                  ExchangesIntegratedType.BitcoinTrade,
+                                                  ExchangeCacheEntityType.SymbolPrice,
+                                                  It.IsAny<Func<TickerPrice, string>>()))
                 .Returns(Task.CompletedTask);
 
             var clientMock = new Mock<IBitcoinTradeIntegrationClient>(MockBehavior.Strict);
-            clientMock.Setup(c => c.GetTickerPriceAsync(symbol))
-                .ReturnsAsync(new ResponseData<TickerPrice> { Code = "200", Data = new TickerPrice { Sell = 1 } });
+            clientMock.Setup(c => c.GetTickersAsync())
+                .ReturnsAsync(new ResponseData<IEnumerable<TickerPrice>> { Code = "200", Data = [new TickerPrice { Ask = 1, Pair = symbol }] });
 
             var strategy = new BitcoinTradeIntegrationStrategy(cacheMock.Object, clientMock.Object);
             var price = await strategy.GetCurrentPriceAsync("BTC", "BRL");
-            Assert.True(price.Item > 0);
+            Assert.True(price.Item.Price > 0);
         }
 
 
@@ -43,24 +45,25 @@ namespace CryptoManager.Integration.Test
         public async Task Should_Return_Exception_When_Symbol_Not_Exists_In_Exchange_Async()
         {
             TickerPrice ticker = null;
-            var symbol = "jsdhjkdhsajkdhnuncatera";
+            var symbol = "nuncatera_jsdhjkdhsajkdh";
             var cacheMock = new Mock<IExchangeIntegrationCache>(MockBehavior.Strict);
-            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.BitcoinTrade, symbol))
+            cacheMock.Setup(repo => repo.GetAsync<TickerPrice>(ExchangesIntegratedType.BitcoinTrade, ExchangeCacheEntityType.SymbolPrice, symbol))
                 .ReturnsAsync(ticker);
 
-            cacheMock.Setup(repo => repo.AddAsync(It.IsAny<TickerPrice>(),
+            cacheMock.Setup(repo => repo.AddAsync(It.IsAny<IEnumerable<TickerPrice>>(), 
                                                   ExchangesIntegratedType.BitcoinTrade,
-                                                  It.IsAny<string>()))
+                                                  ExchangeCacheEntityType.SymbolPrice,
+                                                  It.IsAny<Func<TickerPrice, string>>()))
                 .Returns(Task.CompletedTask);
 
             var clientMock = new Mock<IBitcoinTradeIntegrationClient>(MockBehavior.Strict);
-            clientMock.Setup(c => c.GetTickerPriceAsync(symbol))
-                .ReturnsAsync(new ResponseData<TickerPrice> { Code = "200", Data = null });
+            clientMock.Setup(c => c.GetTickersAsync())
+                .ReturnsAsync(new ResponseData<IEnumerable<TickerPrice>> { Code = "200", Data = null });
 
             var strategy = new BitcoinTradeIntegrationStrategy(cacheMock.Object, clientMock.Object);
             var result = await strategy.GetCurrentPriceAsync("nuncatera", "jsdhjkdhsajkdh");
             Assert.False(result.HasSucceded);
-            Assert.Equal($"symbol {symbol} not exists in Bitcointrade", result.ErrorMessage);
+            Assert.Equal($"symbol {symbol} does not exist in Bitcointrade", result.ErrorMessage);
         }
     }
 }
