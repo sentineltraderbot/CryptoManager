@@ -11,9 +11,7 @@
 </div>
 <div class="modal-body">
   <div *ngIf="isChrome()">
-    <p>
-      Please install the Chrome wallet extension before requesting the airdrop.
-    </p>
+    <p>Please install the Chrome wallet extension.</p>
   </div>
   <div>
     <fieldset class="form-group">
@@ -51,8 +49,8 @@
 
   <div *ngIf="!isChrome()">
     <p>
-      Airdrop requests are not supported on this browser. Please use Google
-      Chrome on a desktop.
+      Wallet connection not supported on this browser. Please use Google Chrome
+      on a desktop.
     </p>
   </div>
   <div *ngIf="errorMessage">
@@ -62,17 +60,6 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button
-    type="button"
-    class="btn btn-secondary"
-    [disabled]="
-      !solanaWalletService.isSolanaWalletConnected() ||
-      !this.solanaWalletService.getWallet().adapter?.publicKey == null
-    "
-    (click)="onClaimAirdrop()"
-  >
-    {{ "Claim Airdrop" | translate }}
-  </button>
   <button
     type="button"
     class="btn btn-secondary"
