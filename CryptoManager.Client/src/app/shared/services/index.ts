@@ -12,3 +12,5 @@ export * from "./chart.service";
 export * from "./ticker.service";
 export * from "./solana-wallet-service";
 export * from "./sentinel-trader-bot-token-service";
+export * from "./clipboard.service";
+export * from "./wallet-service";

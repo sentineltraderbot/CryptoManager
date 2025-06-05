@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using CryptoManager.Domain.Contracts.Business;
+using CryptoManager.Domain.Contracts.Repositories;
 using CryptoManager.Domain.DTOs;
 using CryptoManager.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,17 +16,18 @@ namespace CryptoManager.WebApi.Controllers
     public class SentinelTraderBotTokenController : BaseController
     {
         private readonly ISentinelTraderBotTokenService _service;
-        private readonly IAccountService _accountService;
+        private readonly ITokenSaleRepository _tokenSaleRepository;
+
         public SentinelTraderBotTokenController(
             ISentinelTraderBotTokenService service,
-            IAccountService accountService,
+            ITokenSaleRepository tokenSaleRepository,
             IMapper mapper) : base(mapper)
         {
             _service = service;
-            _accountService = accountService;
+            _tokenSaleRepository = tokenSaleRepository;
         }
 
-         /// <summary>
+        /// <summary>
         /// Get all balances from a wallet
         /// </summary>
         /// <returns>All Balances</returns>
@@ -37,23 +40,19 @@ namespace CryptoManager.WebApi.Controllers
         {
             return Ok(await _service.GetBalancesAsync(solanaWalletAddress));
         }
-
+        
         /// <summary>
-        /// Save an order in database
+        /// Save Token Sale in database
         /// </summary>
-        /// <param name="entity">order to save in database</param>
+        /// <param name="entity">Asset to save in database</param>
         /// <response code="200">if success</response>
-        [HttpPost("airdrop")]
+        [HttpPost]
         [ProducesResponseType(typeof(SimpleObjectResult), 200)]
-        public async Task<IActionResult> AirdropAsync([FromQuery] string solanaWalletAddress)
+        [AllowAnonymous]
+        public async Task<IActionResult> Post([FromBody]TokenSaleDTO entity)
         {
-            var response = await _service.SentinelTraderTokenAirdropAsync(solanaWalletAddress, GetUserId());
-
-            if(response.HasSucceded)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
+            await _tokenSaleRepository.InsertAsync(_mapper.Map<TokenSale>(entity));
+            return Ok(SimpleObjectResult.Success());
         }
     }
 }

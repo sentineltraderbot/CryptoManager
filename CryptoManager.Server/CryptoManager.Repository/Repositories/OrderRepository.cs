@@ -3,7 +3,6 @@ using CryptoManager.Domain.DTOs;
 using CryptoManager.Domain.Entities;
 using CryptoManager.Repository.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -1,4 +1,4 @@
-.balance-airdrop {
+.token-balance {
   .list-group-item {
     background-color: #222;
   }
@@ -11,4 +11,8 @@
   span {
     color: #999;
   }
+}
+
+.main-token-balance {
+  display: inline-flex;
 }

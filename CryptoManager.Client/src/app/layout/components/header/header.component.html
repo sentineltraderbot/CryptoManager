@@ -27,6 +27,14 @@
           <b class="caret"></b>
         </a>
         <div class="dropdown-menu-right" ngbDropdownMenu>
+          <a
+            class="dropdown-item"
+            href="javascript:void(0)"
+            (click)="onReferralClick()"
+          >
+            <i class="fa fa-fw fa-gift"></i>
+            {{ "Referral Link" | translate }}
+          </a>
           <a class="dropdown-item" [routerLink]="['/health']">
             <i class="fa fa-fw fa-heartbeat"></i> {{ "Health" | translate }}
           </a>

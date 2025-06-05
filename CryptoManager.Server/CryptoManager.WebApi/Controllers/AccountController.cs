@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using CryptoManager.Business;
 using CryptoManager.Domain.Contracts.Business;
 using CryptoManager.Domain.DTOs;
 using CryptoManager.Domain.Entities;
@@ -30,16 +31,19 @@ namespace CryptoManager.WebApi.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private static readonly HttpClient _client = new HttpClient();
         private readonly IAccountService _accountService;
+        private readonly IRecaptchaService _recaptchaService;
 
         public AccountController(JwtFactory jwtFactory,
                                  SignInManager<ApplicationUser> signInManager,
                                  UserManager<ApplicationUser> userManager,
                                  IAccountService accountService,
+                                 IRecaptchaService recaptchaService,
                                  IMapper mapper) : base(mapper)
         {
             _jwtFactory = jwtFactory;
             _userManager = userManager;
             _accountService = accountService;
+            _recaptchaService = recaptchaService;
         }
 
         /// <summary>
@@ -69,10 +73,17 @@ namespace CryptoManager.WebApi.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(ObjectResult), 400)]
         [ProducesResponseType(typeof(ObjectResult), 200)]
-        public async Task<IActionResult> ExternalLoginFacebook(string accessToken)
+        public async Task<IActionResult> ExternalLoginFacebook(string accessToken, string recaptchaToken, string referredById = null)
         {
             try
             {
+                var isHuman = await _recaptchaService.VerifyTokenAsync(recaptchaToken);
+
+                if (!isHuman)
+                {
+                    return BadRequest("reCAPTCHA verification failed.");
+                }
+
                 // 1.generate an app access token
                 var appAccessTokenResponse = await _client.GetStringAsync($"https://graph.facebook.com/oauth/access_token?client_id={WebUtil.FacebookAppId}&client_secret={WebUtil.FacebookAppSecret}&grant_type=client_credentials");
                 var appAccessToken = JsonConvert.DeserializeObject<FacebookAppAccessToken>(appAccessTokenResponse);
@@ -88,9 +99,10 @@ namespace CryptoManager.WebApi.Controllers
                 // 3. we've got a valid token so we can request user data from fb
                 var userInfoResponse = await _client.GetStringAsync($"https://graph.facebook.com/v17.0/me?fields=id,email,first_name,last_name,name,gender,locale,birthday,picture&access_token={accessToken}");
                 var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
-
+                var user = _mapper.Map<ApplicationUser>(userInfo);
+                user.ReferredById = referredById;
                 // 4. ready to create the local user account (if necessary) and jwt
-                var userResponse = await _accountService.UpdateOrCreateUserAsync(_mapper.Map<ApplicationUser>(userInfo));
+                var userResponse = await _accountService.UpdateOrCreateUserAsync(user);
                 if (!userResponse.HasSucceded)
                 {
                     return new BadRequestObjectResult(userResponse.ErrorMessage);
@@ -107,12 +119,21 @@ namespace CryptoManager.WebApi.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(ObjectResult), 400)]
         [ProducesResponseType(typeof(ObjectResult), 200)]
-        public async Task<IActionResult> ExternalLoginGoogle(string token)
+        public async Task<IActionResult> ExternalLoginGoogle(string token, string recaptchaToken, string referredById = null)
         {
             try
             {
+                var isHuman = await _recaptchaService.VerifyTokenAsync(recaptchaToken);
+
+                if (!isHuman)
+                {
+                    return BadRequest("reCAPTCHA verification failed.");
+                }
+
                 var userInfo = await GoogleJsonWebSignature.ValidateAsync(token);
-                var userResponse = await _accountService.UpdateOrCreateUserAsync(_mapper.Map<ApplicationUser>(userInfo));
+                var user = _mapper.Map<ApplicationUser>(userInfo);
+                user.ReferredById = referredById;
+                var userResponse = await _accountService.UpdateOrCreateUserAsync(user);
                 if (!userResponse.HasSucceded)
                 {
                     return new BadRequestObjectResult(userResponse.ErrorMessage);
@@ -124,6 +145,19 @@ namespace CryptoManager.WebApi.Controllers
             {
                 return new BadRequestObjectResult(ex.Message);
             }
+        }
+
+        [HttpPost("UpdateWallet")]
+        [ProducesResponseType(typeof(SimpleObjectResult), 200)]
+        public async Task<IActionResult> UpdateWalletAsync([FromQuery] string solanaWalletAddress)
+        {
+            var response = await _accountService.UpdateUserWallet(solanaWalletAddress, GetUserId());
+
+            if(response.HasSucceded)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
 
         private async Task<string> GenerateToken(ApplicationUser user)

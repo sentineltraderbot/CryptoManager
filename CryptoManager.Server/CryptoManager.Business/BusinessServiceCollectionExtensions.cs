@@ -13,6 +13,7 @@ namespace CryptoManager.Business
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ISentinelTraderBotTokenService, SentinelTraderBotTokenService>();
+            services.AddScoped<IRecaptchaService, RecaptchaService>();
 
             return services;
         }

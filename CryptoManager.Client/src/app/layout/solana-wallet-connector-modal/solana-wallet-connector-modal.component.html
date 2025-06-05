@@ -63,8 +63,19 @@
   <button
     type="button"
     class="btn btn-secondary"
+    [disabled]="
+      !solanaWalletService.isSolanaWalletConnected() ||
+      !this.solanaWalletService.getWallet().adapter?.publicKey == null
+    "
+    (click)="onSaveWallet()"
+  >
+    {{ "Save" | translate }}
+  </button>
+  <button
+    type="button"
+    class="btn btn-secondary"
     (click)="activeModal.close(false)"
   >
-    {{ "Cancel" | translate }}
+    {{ "Close" | translate }}
   </button>
 </div>

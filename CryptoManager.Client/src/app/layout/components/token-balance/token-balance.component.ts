@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import {
+  AccountService,
   AlertHandlerService,
   AlertType,
   SentinelTraderBotTokenService,
@@ -42,6 +43,7 @@ export class TokenBalanceComponent {
     private alertService: AlertHandlerService,
     private modalService: NgbModal,
     private sentinelTraderBotTokenService: SentinelTraderBotTokenService,
+    private accountService: AccountService,
     public solanaWalletService: SolanaWalletService
   ) {}
 
@@ -57,11 +59,11 @@ export class TokenBalanceComponent {
     modalRef.result
       .then((userResponse) => {
         if (userResponse) {
-          this.sentinelTraderBotTokenService.airdrop(userResponse).subscribe({
+          this.accountService.udpateUserWallet(userResponse).subscribe({
             next: () => {
               this.alertService.createAlert(
                 AlertType.Success,
-                this.translate.instant("AirdropSuccess")
+                this.translate.instant("Success")
               );
               this.userDetailsChanged.emit(true);
               this.getTokenAccountBalance();

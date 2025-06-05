@@ -55,7 +55,7 @@ export class SolanaWalletConnectorModalComponent implements OnInit {
     this.solanaWalletService.selectWallet(walletName);
   }
 
-  onClaimAirdrop() {
+  onSaveWallet() {
     this.activeModal.close(
       this.solanaWalletService.getWallet().adapter.publicKey.toBase58()
     );

@@ -72,6 +72,13 @@ public class AccountService : IAccountService
         return _userManager.FindByIdAsync(userId.ToString());
     }
 
+    public async Task<SimpleObjectResult> UpdateUserWallet(string walletAddress, Guid userId)
+    {
+        var user = await GetUserAsync(userId);
+        user.SolanaWalletAddress = walletAddress;
+        return await UpdateUserAsync(user);
+    }
+
     public async Task<SimpleObjectResult> UpdateUserAsync(ApplicationUser user)
     {
         var response = await _userManager.UpdateAsync(user);

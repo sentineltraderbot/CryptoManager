@@ -1,11 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, NavigationEnd } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
-import {
-  AccountService,
-  AlertHandlerService,
-  UserDetails,
-} from "../../../shared";
+import { AccountService, ClipboardService, UserDetails } from "../../../shared";
 
 @Component({
   selector: "app-header",
@@ -19,7 +15,8 @@ export class HeaderComponent implements OnInit {
   constructor(
     private translate: TranslateService,
     public router: Router,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private clipboardService: ClipboardService
   ) {
     this.router.events.subscribe((val) => {
       if (
@@ -34,6 +31,11 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.getUserDetails();
+  }
+
+  onReferralClick() {
+    const referralLink = `https://sentineltraderbot.com/?referralCode=${this.userDetails.id}`;
+    this.clipboardService.copyToClipboard(referralLink);
   }
 
   getUserDetails(shouldGet: boolean = true) {

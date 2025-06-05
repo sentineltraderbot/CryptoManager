@@ -2,11 +2,17 @@ import { Component, OnInit, NgZone, Renderer2 } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { routerTransition } from "../router.animations";
-import { Errors, AccountService, HealthService } from "../shared/";
+import {
+  Errors,
+  AccountService,
+  HealthService,
+  LocalStorageKeyType,
+} from "../shared/";
 import { HealthStatusType } from "../shared/models/health-status-type.enum";
 import { environment } from "../../environments/environment";
 declare var particlesJS: any;
 declare var google: any;
+declare var grecaptcha: any;
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
@@ -62,33 +68,57 @@ export class LoginComponent implements OnInit {
 
   onFacebookLogin() {
     this.errors = { errors: {} };
-    this.accountService.facebookLogin().subscribe({
-      next: () => {
-        this.zone.run(() => this.router.navigateByUrl(this.returnUrl));
-      },
-      error: (err) => {
-        const error = JSON.stringify(err);
-        this.healthService.ping().subscribe({
-          next: () => alert(error),
-          error: () => console.log("API is Offline"),
+    grecaptcha.ready(() => {
+      grecaptcha
+        .execute("6LfX9EgrAAAAADoKgk0FAU8CR5iIXpCFCFYQnMPH", {
+          action: "submit",
+        })
+        .then((token) => {
+          const referralCode = localStorage.getItem(
+            LocalStorageKeyType.ReferralCode
+          );
+          this.accountService.facebookLogin(token, referralCode).subscribe({
+            next: () => {
+              this.zone.run(() => this.router.navigateByUrl(this.returnUrl));
+            },
+            error: (err) => {
+              const error = JSON.stringify(err);
+              this.healthService.ping().subscribe({
+                next: () => alert(error),
+                error: () => console.log("API is Offline"),
+              });
+            },
+          });
         });
-      },
     });
   }
 
   onGoogleLogin(response: any) {
     this.errors = { errors: {} };
-    this.accountService.googleLogin(response.credential).subscribe({
-      next: () => {
-        this.zone.run(() => this.router.navigateByUrl(this.returnUrl));
-      },
-      error: (err) => {
-        const error = JSON.stringify(err);
-        this.healthService.ping().subscribe({
-          next: () => alert(error),
-          error: () => console.log("API is Offline"),
+    grecaptcha.ready(() => {
+      grecaptcha
+        .execute("6LfX9EgrAAAAADoKgk0FAU8CR5iIXpCFCFYQnMPH", {
+          action: "submit",
+        })
+        .then((token) => {
+          const referralCode = localStorage.getItem(
+            LocalStorageKeyType.ReferralCode
+          );
+          this.accountService
+            .googleLogin(response.credential, token, referralCode)
+            .subscribe({
+              next: () => {
+                this.zone.run(() => this.router.navigateByUrl(this.returnUrl));
+              },
+              error: (err) => {
+                const error = JSON.stringify(err);
+                this.healthService.ping().subscribe({
+                  next: () => alert(error),
+                  error: () => console.log("API is Offline"),
+                });
+              },
+            });
         });
-      },
     });
   }
 

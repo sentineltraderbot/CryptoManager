@@ -10,6 +10,7 @@ import { HttpParams } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { ApiType } from "../models/api-type.enum";
 import { UserDetails } from "../models/user-details.model";
+import { SimpleObjectResult } from "../models";
 declare const FB: any;
 
 @Injectable()
@@ -61,12 +62,17 @@ export class AccountService {
     }
   }
 
-  facebookLogin(): Observable<boolean> {
+  facebookLogin(
+    recaptchaToken: string,
+    referredById: string
+  ): Observable<boolean> {
     return new Observable<boolean>((observer) => {
       FB.getLoginStatus((response) => {
         if (response.status === "connected") {
           return this.authFacebookUser(
-            response.authResponse.accessToken
+            response.authResponse.accessToken,
+            recaptchaToken,
+            referredById
           ).subscribe({
             next: (data) => {
               observer.next(data);
@@ -81,7 +87,9 @@ export class AccountService {
             (loginResponse) => {
               if (loginResponse.status !== "not_authorized") {
                 return this.authFacebookUser(
-                  loginResponse.authResponse.accessToken
+                  loginResponse.authResponse.accessToken,
+                  recaptchaToken,
+                  referredById
                 ).subscribe({
                   next: (data) => {
                     observer.next(data);
@@ -103,22 +111,35 @@ export class AccountService {
     });
   }
 
-  googleLogin(token: string): Observable<boolean> {
+  googleLogin(
+    token: string,
+    recaptchaToken: string,
+    referredById: string
+  ): Observable<boolean> {
     return new Observable<boolean>((observer) => {
-      return this.authGoogleUser(token).subscribe({
-        next: (data) => {
-          observer.next(data);
-        },
-        error: (error) => {
-          observer.error(error);
-          this.purgeAuth();
-        },
-      });
+      return this.authGoogleUser(token, recaptchaToken, referredById).subscribe(
+        {
+          next: (data) => {
+            observer.next(data);
+          },
+          error: (error) => {
+            observer.error(error);
+            this.purgeAuth();
+          },
+        }
+      );
     });
   }
 
-  authFacebookUser(accessToken: string): Observable<boolean> {
-    let httpParams = new HttpParams().append("accessToken", accessToken);
+  authFacebookUser(
+    accessToken: string,
+    recaptchaToken: string,
+    referredById: string
+  ): Observable<boolean> {
+    let httpParams = new HttpParams()
+      .append("accessToken", accessToken)
+      .append("recaptchToken", recaptchaToken)
+      .append("referredById", referredById);
     return this.apiService
       .post(
         this.serviceURL + "/ExternalLoginFacebook",
@@ -135,8 +156,15 @@ export class AccountService {
       );
   }
 
-  authGoogleUser(accessToken: string): Observable<boolean> {
-    let httpParams = new HttpParams().append("token", accessToken);
+  authGoogleUser(
+    accessToken: string,
+    recaptchaToken: string,
+    referredById: string
+  ): Observable<boolean> {
+    let httpParams = new HttpParams()
+      .append("token", accessToken)
+      .append("recaptchaToken", recaptchaToken)
+      .append("referredById", referredById);
     return this.apiService
       .post(
         this.serviceURL + "/ExternalLoginGoogle",
@@ -175,5 +203,17 @@ export class AccountService {
     let tokenDecoded = this.jwtHelper.decodeToken(data);
     let user: UserToken = new UserToken(tokenDecoded, data);
     return user;
+  }
+
+  udpateUserWallet(
+    solanaWalletAddress: string
+  ): Observable<SimpleObjectResult> {
+    var queryString = new URLSearchParams({ solanaWalletAddress }).toString();
+    return this.apiService.post(
+      `${this.serviceURL}/UpdateWallet?${queryString}`,
+      null,
+      null,
+      ApiType.CryptoManagerServerApi
+    );
   }
 }

@@ -3,6 +3,7 @@ using System;
 using CryptoManager.Repository.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CryptoManager.Repository.Migrations
 {
     [DbContext(typeof(ApplicationIdentityDbContext))]
-    partial class ApplicationIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250530155307_AddingReferralToUserTable")]
+    partial class AddingReferralToUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.13");
@@ -165,7 +168,7 @@ namespace CryptoManager.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Asset", (string)null);
+                    b.ToTable("Asset");
                 });
 
             modelBuilder.Entity("CryptoManager.Domain.Entities.Exchange", b =>
@@ -197,7 +200,7 @@ namespace CryptoManager.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Exchange", (string)null);
+                    b.ToTable("Exchange");
                 });
 
             modelBuilder.Entity("CryptoManager.Domain.Entities.Order", b =>
@@ -257,7 +260,7 @@ namespace CryptoManager.Repository.Migrations
 
                     b.HasIndex("RelatedOrderId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("CryptoManager.Domain.Entities.OrderItem", b =>
@@ -296,7 +299,7 @@ namespace CryptoManager.Repository.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItem", (string)null);
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

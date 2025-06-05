@@ -10,6 +10,7 @@ namespace CryptoManager.Repository.DatabaseContext
         public DbSet<Asset> Asset { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<OrderItem> OrderItem { get; set; }
+        public DbSet<TokenSale> TokenSale { get; set; }
 
         public EntityContext(DbContextOptions<EntityContext> options) : base(options)
         {

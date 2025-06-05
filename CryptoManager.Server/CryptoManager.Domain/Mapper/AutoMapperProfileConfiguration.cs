@@ -27,6 +27,7 @@ namespace CryptoManager.Domain.Mapper
             CreateMap<Order, OrderDTO>();
             CreateMap<OrderDTO, Order>();
             CreateMap<OrderItem, OrderItemDTO>();
+            CreateMap<TokenSaleDTO, TokenSale>();
             CreateMap<OrderItemDTO, OrderItem>();
             CreateMap<FacebookUserData, ApplicationUser>()
                 .ForMember(dest => dest.FacebookId, opts => opts.MapFrom(src => src.Id))

@@ -35,3 +35,4 @@ export * from "./robo-trader/m-l-sdca-logistic-regression-parameter.model";
 export * from "./robo-trader/indicator-field-type.enum";
 export * from "./ticker-balance.model";
 export * from "./user-details.model";
+export * from "./local-storage-key-type.enum";

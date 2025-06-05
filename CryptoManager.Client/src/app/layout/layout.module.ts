@@ -13,6 +13,7 @@ import { FormsModule } from "@angular/forms";
 import { SolanaWalletConnectorModalComponent } from "./solana-wallet-connector-modal/solana-wallet-connector-modal.component";
 import { TokenBalanceComponent } from "./components/token-balance/token-balance.component";
 import { NgSelectModule } from "@ng-select/ng-select";
+import { WalletConnectorModalComponent } from "./wallet-connector-modal/wallet-connector-modal.component";
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
     SidebarComponent,
     HeaderComponent,
     SolanaWalletConnectorModalComponent,
+    WalletConnectorModalComponent,
     TokenBalanceComponent,
   ],
 })

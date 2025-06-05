@@ -57,6 +57,11 @@ namespace CryptoManager.Integration
             services.AddRefitClient<IKuCoinIntegrationClient>()
                 .ConfigureHttpClient(async (sp, c) => await AddHttpClient(sp, c, ExchangesIntegratedType.KuCoin));
 
+            services.AddRefitClient<IRecaptchaClient>()
+                .ConfigureHttpClient((c) =>
+                    c.BaseAddress = new Uri("https://www.google.com/")
+                );
+
             return services;
         }
 

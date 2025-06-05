@@ -10,4 +10,5 @@ public interface IAccountService
     Task<ApplicationUser> GetUserAsync(Guid userId);
     Task<ObjectResult<ApplicationUser>> UpdateOrCreateUserAsync(ApplicationUser userInfo);
     Task<SimpleObjectResult> UpdateUserAsync(ApplicationUser user);
+    Task<SimpleObjectResult> UpdateUserWallet(string walletAddress, Guid userId);
 }
