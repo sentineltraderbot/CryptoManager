@@ -9,13 +9,13 @@ namespace CryptoManager.Repository.Test.Mocks
 {
     public class MockDbContext
     {
-        public static EntityContext CreateDBInMemoryContext()
+        public static ApplicationIdentityDbContext CreateDBInMemoryContext()
         {
-            var builder = new DbContextOptionsBuilder<EntityContext>();
+            var builder = new DbContextOptionsBuilder<ApplicationIdentityDbContext>();
             builder.UseInMemoryDatabase($"DBTEST{Guid.NewGuid()}")
                  .ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning));
 
-            return new EntityContext(builder.Options);
+            return new ApplicationIdentityDbContext(builder.Options);
         }
     }
 }

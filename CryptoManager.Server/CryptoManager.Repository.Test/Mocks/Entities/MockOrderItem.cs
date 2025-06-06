@@ -10,7 +10,7 @@ namespace CryptoManager.Repository.Test.Mocks.Entities
 {
     public class MockOrderItem
     {
-        public static OrderItemRepository GetDBTestRepository(EntityContext context = null)
+        public static OrderItemRepository GetDBTestRepository(ApplicationIdentityDbContext context = null)
         {
             var entityORM = MockEntityRepository<OrderItem>.GetRepoTestInMemory(context);
             return new OrderItemRepository(entityORM);

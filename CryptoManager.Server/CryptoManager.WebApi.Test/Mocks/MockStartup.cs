@@ -82,7 +82,7 @@ namespace CryptoManager.WebApi.Test.Mocks
                 .ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning));
             });
 
-            services.AddDbContextPool<EntityContext>(options =>
+            services.AddDbContextPool<ApplicationIdentityDbContext>(options =>
             {
                 options.UseInMemoryDatabase("DBINTEGRATIONTEST")
                 .ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning));
