@@ -8,6 +8,11 @@ namespace CryptoManager.Repository.DatabaseContext
 {
     public class ApplicationIdentityDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
+        public DbSet<Exchange> Exchange { get; set; }
+        public DbSet<Asset> Asset { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderItem> OrderItem { get; set; }
+        public DbSet<TokenSale> TokenSale { get; set; }
         public ApplicationIdentityDbContext(DbContextOptions<ApplicationIdentityDbContext> options)
             : base(options)
         {

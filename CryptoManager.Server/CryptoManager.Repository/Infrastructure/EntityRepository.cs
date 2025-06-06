@@ -13,9 +13,9 @@ namespace CryptoManager.Repository.Infrastructure
 {
     public class EntityRepository<T> : IORM<T>, IDisposable where T : class, IEntity
     {
-        protected EntityContext DataContext;
+        protected ApplicationIdentityDbContext DataContext;
         protected readonly DbSet<T> DBSet;
-        public EntityRepository(EntityContext dataContext)
+        public EntityRepository(ApplicationIdentityDbContext dataContext)
         {
             DataContext = dataContext;
             DataContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;

@@ -10,9 +10,9 @@
   </button>
 </div>
 <div class="modal-body">
-  <div *ngIf="isChrome()">
+  <!-- <div *ngIf="isChrome()">
     <p>Please install the Chrome wallet extension.</p>
-  </div>
+  </div> -->
   <div>
     <fieldset class="form-group">
       <label>{{ "Wallet" | translate }}</label>
@@ -47,12 +47,12 @@
     Disconnect
   </button>
 
-  <div *ngIf="!isChrome()">
+  <!-- <div *ngIf="!isChrome()">
     <p>
       Wallet connection not supported on this browser. Please use Google Chrome
       on a desktop.
     </p>
-  </div>
+  </div> -->
   <div *ngIf="errorMessage">
     <p>
       {{ errorMessage }}

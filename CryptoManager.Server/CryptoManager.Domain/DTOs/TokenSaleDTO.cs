@@ -13,7 +13,7 @@ public class TokenSaleDTO
     public string BlockchainTx { get; set; }
     public decimal SOLQuantity { get; set; }
     public decimal SENTBOTQuantity { get; set; }
-    public decimal Quantity { get; set; }
+    public decimal ReferralQuantity { get; set; }
     public string ReferralWalletAddress { get; set; }
     public Guid? ReferralUserId { get; set; }
 }

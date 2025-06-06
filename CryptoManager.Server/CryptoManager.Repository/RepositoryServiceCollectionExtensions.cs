@@ -21,24 +21,12 @@ namespace CryptoManager.Repository
                     sqlOptios => sqlOptios.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
             });
 
-            services.AddDbContextPool<EntityContext>(options =>
-            {
-                options.UseSqlite(connectionString, 
-                    sqlOptios => sqlOptios.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
-            });
-
             return services;
         }
 
         public static IServiceCollection AddSQLServerDbContexts(this IServiceCollection services, string connectionString)
         {
             services.AddDbContextPool<ApplicationIdentityDbContext>(options =>
-            {
-                options.UseSqlServer(connectionString, 
-                    sqlOptios => sqlOptios.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
-            });
-
-            services.AddDbContextPool<EntityContext>(options =>
             {
                 options.UseSqlServer(connectionString, 
                     sqlOptios => sqlOptios.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
@@ -65,6 +53,7 @@ namespace CryptoManager.Repository
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+            services.AddScoped<ITokenSaleRepository, TokenSaleRepository>();
 
             return services;
         }
@@ -82,9 +71,6 @@ namespace CryptoManager.Repository
             {
                 var applicationIdentityDbContext = serviceScope.ServiceProvider.GetService<ApplicationIdentityDbContext>();
                 applicationIdentityDbContext.Database.EnsureCreated();
-
-                var entityContext = serviceScope.ServiceProvider.GetService<EntityContext>();
-                entityContext.Database.EnsureCreated();
             }
 
             return app;

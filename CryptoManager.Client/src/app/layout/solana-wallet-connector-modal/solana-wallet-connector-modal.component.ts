@@ -18,10 +18,10 @@ export class SolanaWalletConnectorModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.isChrome()) {
-      this.wallets = this.solanaWalletService.getWallets();
-      this.walletName = this.solanaWalletService.getWalletName();
-    }
+    // if (this.isChrome()) {
+    this.wallets = this.solanaWalletService.getWallets();
+    this.walletName = this.solanaWalletService.getWalletName();
+    // }
   }
 
   onConnect() {
