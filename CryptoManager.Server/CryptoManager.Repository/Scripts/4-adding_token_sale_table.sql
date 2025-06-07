@@ -16,7 +16,7 @@ BEGIN
         [SENTBOTQuantity] decimal(18, 8) NOT NULL,
         [ReferralQuantity] decimal(18, 8) NOT NULL,
         [ReferralWalletAddress] nvarchar(max) NULL,
-        [ReferralUserId] nvarchar(max) NULL,
+        [ReferralUserId] uniqueidentifier NULL,
         [IsExcluded] bit NOT NULL,
         [IsEnabled] bit NOT NULL,
         [RegistryDate] datetime2 NOT NULL,

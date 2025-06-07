@@ -93,14 +93,21 @@ namespace CryptoManager.WebApi.Controllers
 
                 if (!userAccessTokenValidation.Data.IsValid)
                 {
-                    return new BadRequestObjectResult("login_failure - message:Invalid facebook token.");
+                    return BadRequest("login_failure - message:Invalid facebook token.");
                 }
 
                 // 3. we've got a valid token so we can request user data from fb
                 var userInfoResponse = await _client.GetStringAsync($"https://graph.facebook.com/v17.0/me?fields=id,email,first_name,last_name,name,gender,locale,birthday,picture&access_token={accessToken}");
                 var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
                 var user = _mapper.Map<ApplicationUser>(userInfo);
-                user.ReferredById = referredById;
+                if (Guid.TryParse(referredById, out var referredByGuid))
+                {
+                    user.ReferredById = referredByGuid;
+                }
+                else
+                {
+                    user.ReferredById = null;
+                }
                 // 4. ready to create the local user account (if necessary) and jwt
                 var userResponse = await _accountService.UpdateOrCreateUserAsync(user);
                 if (!userResponse.HasSucceded)
@@ -111,7 +118,7 @@ namespace CryptoManager.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return new BadRequestObjectResult(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -132,18 +139,25 @@ namespace CryptoManager.WebApi.Controllers
 
                 var userInfo = await GoogleJsonWebSignature.ValidateAsync(token);
                 var user = _mapper.Map<ApplicationUser>(userInfo);
-                user.ReferredById = referredById;
+                if (Guid.TryParse(referredById, out var referredByGuid))
+                {
+                    user.ReferredById = referredByGuid;
+                }
+                else
+                {
+                    user.ReferredById = null;
+                }
                 var userResponse = await _accountService.UpdateOrCreateUserAsync(user);
                 if (!userResponse.HasSucceded)
                 {
-                    return new BadRequestObjectResult(userResponse.ErrorMessage);
+                    return BadRequest(userResponse.ErrorMessage);
                 }
-                return new OkObjectResult(await GenerateToken(userResponse.Item));
+                return Ok(await GenerateToken(userResponse.Item));
 
             }
             catch (Exception ex)
             {
-                return new BadRequestObjectResult(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 

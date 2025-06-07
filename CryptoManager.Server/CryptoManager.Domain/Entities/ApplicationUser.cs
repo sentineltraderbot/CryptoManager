@@ -15,7 +15,7 @@ namespace CryptoManager.Domain.Entities
         public string PictureUrl { get; set; }
         public bool HasReceivedAirdrop { get; set; }
         public string SolanaWalletAddress { get; set; }
-        public string ReferredById { get; set; }
+        public Guid? ReferredById { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

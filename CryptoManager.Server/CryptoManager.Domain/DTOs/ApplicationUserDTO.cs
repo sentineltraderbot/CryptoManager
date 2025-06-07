@@ -10,5 +10,5 @@ public class ApplicationUserDTO
     public string ImageURL { get; set; }
     public bool HasReceivedAirdrop { get; set; }
     public string SolanaWalletAddress { get; set; }
-    public string ReferredById { get; set; }
+    public Guid? ReferredById { get; set; }
 }
